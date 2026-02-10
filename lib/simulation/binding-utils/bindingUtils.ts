@@ -1,10 +1,11 @@
+import { filter } from "min-dash";
 import {
   buildArcPlaceInfoDict,
   getBindingPerDataClassFromNonLinkingArcs,
 } from "./bindingUtilsArcPlaceInfoLogic";
 import {
   hasAvailableTokensForAllArcs,
-  hasUnboundOutputVariables,
+  isStructurallyIncorrect,
 } from "./bindingUtilsEarlyReturnLogic";
 import { checkExactSynchroConstraints } from "./bindingUtilsExactSynchro";
 import {
@@ -18,18 +19,21 @@ import {
   getDataClassesNotInLinks,
   getTokenPerLink,
 } from "./bindingUtilsLinkingLogic";
+import { json } from "stream/consumers";
 
 export function getValidInputBindings(
   transition: Transition,
 ): BindingPerDataClass[] {
-  // Early return: unbound output variables
-  if (hasUnboundOutputVariables(transition.incoming, transition.outgoing)[0]) {
+  // Early return: structural incorrect
+  if (isStructurallyIncorrect(transition.incoming, transition.outgoing)[0]) {
     // console.log(`Transition ${transition.id} has unbound output variables.`);
     return [];
   }
 
   // Step 1: build arcPlaceInfoDict and tokenStructure
   const arcPlaceInfoDict = buildArcPlaceInfoDict(transition.incoming);
+
+  //console.log(`Transition ${transition.id} arcPlaceInfoDict: ${JSON.stringify(arcPlaceInfoDict)}`);
 
   // Early return: missing tokens in non-inhibitor arcs
   if (!hasAvailableTokensForAllArcs(arcPlaceInfoDict)) {
@@ -46,6 +50,8 @@ export function getValidInputBindings(
   // Step 3: compute bindings
   const bindingPerDataClassFromNonLinkingArcs =
     getBindingPerDataClassFromNonLinkingArcs(nonInhibitorArcs);
+
+  //console.log(`Transition ${transition.id} biggest links: ${JSON.stringify(tokenPerLink)}`);
 
   let validInputBindings: BindingPerDataClass[];
 
@@ -87,6 +93,8 @@ export function getValidInputBindings(
     validInputBindings = cartesianProductBindings(bindingCandidatesPerLink);
   }
 
+  console.log(`Transition ${transition.id} has ${JSON.stringify(validInputBindings)} valid input bindings before filtering by inhibitors and checking ExactSubsetSynchro constraints.`);
+
   // Step 4: eliminate bindings blocked by inhibitors
   const filteredInputBindings = filterBindingsByInhibitors(
     validInputBindings,
@@ -99,6 +107,8 @@ export function getValidInputBindings(
     arcPlaceInfoDict,
     filteredInputBindings,
   );
+
+  console.log(`Transition ${transition.id} has ${JSON.stringify(synchedInputBindings)} valid input bindings.`);
 
   return synchedInputBindings;
 }

@@ -1,4 +1,7 @@
+import { has } from "min-dash";
 import { getDataClassKey } from "./bindingUtilsHelper";
+import { create } from "domain";
+import { error } from "console";
 
 /**
  * Determines whether there are unbound output variables based on the provided incoming and outgoing arcs.
@@ -11,30 +14,36 @@ import { getDataClassKey } from "./bindingUtilsHelper";
  * @param incomingArcs - The list of incoming arcs to the node, each potentially carrying data class keys.
  * @param outgoingArcs - The list of outgoing arcs from the node, each potentially carrying data class keys.
  * @returns A tuple:
- *   - The first element is a boolean indicating whether there are unbound output variables.
+ *   - The first element is a boolean indicating whether the structure is incorrect.
  *   - The second element is an array of string keys representing the unbound output data class keys.
  */
-export function hasUnboundOutputVariables(
+export function isStructurallyIncorrect(
   incomingArcs: Arc[],
   outgoingArcs: Arc[],
-): [boolean, string[]] {
+): [boolean, string] {
   incomingArcs = incomingArcs.filter((arc) => !arc.businessObject.isInhibitorArc);
   outgoingArcs = outgoingArcs.filter((arc) => !arc.businessObject.isInhibitorArc);
 
-  function getDataClassKeysFromArcs(arcs: Arc[], isOutgoing: boolean): [Set<string>, number] {
+  const sources: string[] = [];
+  const targets: string[] = [];
+  let hasArcsWithoutDataClass = false;
+
+  function getDataClassKeysFromArcs(arcs: Arc[], isOutgoing: boolean): Set<string> {
     const dataClassKeys = new Set<string>();
-    let completelyGeneratedArcs = 0;
     for (const arc of arcs) {
+      const arcObject = arc.businessObject;
+      isOutgoing ?
+        targets.push(arcObject.target.name || arcObject.target.id) :
+        sources.push(arcObject.source.name || arcObject.source.id);
       const inscriptionElements =
-        arc.businessObject.inscription?.inscriptionElements || [];
-      const variableType = arc.businessObject.variableType || { id: "", alias: "" };
+        arcObject.inscription?.inscriptionElements || [];
+      const variableType = arcObject.variableType || { id: "", alias: "" };
       if (inscriptionElements.length === 0) {
-        return [new Set(), 0]; // Return an empty Set and zero count to indicate structural incorrectness
+        hasArcsWithoutDataClass = true;
+        continue;
       }
-      let countGenerated = 0;
       for (const el of inscriptionElements) {
-        if (isOutgoing && el.isGenerated) {
-          countGenerated++;
+        if (el.isGenerated) {
           continue;
         }
         dataClassKeys.add(getDataClassKey(
@@ -43,28 +52,31 @@ export function hasUnboundOutputVariables(
           (el.dataClass.id === variableType.id && el.dataClass.alias === variableType.alias),
         ));
       }
-      if (isOutgoing && countGenerated === inscriptionElements.length)
-        completelyGeneratedArcs++;
     }
-    return [dataClassKeys, completelyGeneratedArcs];
+    return dataClassKeys;
   }
 
-  const inputDataClassKeys = getDataClassKeysFromArcs(incomingArcs, false)[0];
-  const [outputDataClassKeys, completelyGeneratedArcs] = getDataClassKeysFromArcs(outgoingArcs, true);
+  const inputDataClassKeys = getDataClassKeysFromArcs(incomingArcs, false);
+  const outputDataClassKeys = getDataClassKeysFromArcs(outgoingArcs, true);
 
-  let outputDataClassKeysArray = Array.from(outputDataClassKeys).filter(key => !inputDataClassKeys.has(key));
-  const hasNoOutputDataClassKeys = outputDataClassKeys.size === 0;
-  const hasNonGeneratedOutgoingArcs = outgoingArcs.length - completelyGeneratedArcs > 0;
-  const hasUnboundByDataClassKey = outputDataClassKeysArray.length > 0;
-  const hasIncomingArcsWithoutDataClassKeys = (inputDataClassKeys.size === 0 && incomingArcs.length > 0);
-  if (hasIncomingArcsWithoutDataClassKeys)
-    outputDataClassKeysArray = [];
-  const hasUnboundOutputs =
-    (hasNoOutputDataClassKeys && hasNonGeneratedOutgoingArcs) ||
-    hasUnboundByDataClassKey ||
-    hasIncomingArcsWithoutDataClassKeys;
+  const duplicateTargets = targets.filter((id, index) => targets.indexOf(id) !== index);
+  const duplicateSources = sources.filter((id, index) => sources.indexOf(id) !== index);
 
-  return [hasUnboundOutputs, outputDataClassKeysArray];
+  const unboundOutputDataClassKeys = Array.from(outputDataClassKeys).filter(key => !inputDataClassKeys.has(key));
+  const hasUnboundByDataClassKey = unboundOutputDataClassKeys.length > 0;
+
+  const isStructurallyIncorrect =
+    hasArcsWithoutDataClass ||
+    duplicateTargets.length > 0 ||
+    duplicateSources.length > 0 ||
+    hasUnboundByDataClassKey;
+
+  return [isStructurallyIncorrect, createStructuralIncorrectnessMessage(
+    hasArcsWithoutDataClass,
+    duplicateSources,
+    duplicateTargets,
+    unboundOutputDataClassKeys
+  )];
 }
 
 /**
@@ -84,4 +96,39 @@ export function hasAvailableTokensForAllArcs(
     (arcPlaceInfo) =>
       arcPlaceInfo.isInhibitorArc || arcPlaceInfo.tokens.length > 0,
   );
+}
+
+function createStructuralIncorrectnessMessage(
+  hasArcsWithoutDataClass: boolean,
+  duplicateSources: string[],
+  duplicateTargets: string[],
+  unboundOutputDataClassKeys: string[]
+): string {
+  let errorMessage = "This transition can structurally never be fired!";
+
+  if (hasArcsWithoutDataClass) {
+    errorMessage += "\n\nPlease add at least one data class to all places.";
+  }
+  if (duplicateSources.length > 0 || duplicateTargets.length > 0) {
+    errorMessage += `\n\nEach place should have maximally one arc towards and from each transition.`;
+  } if (duplicateSources.length > 0) {
+    errorMessage += `\nThere are multiple incoming arcs from each of: [${duplicateSources.join(", ")}].`;
+  } if (duplicateTargets.length > 0) {
+    errorMessage += `\nThere are multiple outgoing arcs towards each of: [${duplicateTargets.join(", ")}].`;
+  }
+  if (unboundOutputDataClassKeys.length > 0) {
+    const varString = unboundOutputDataClassKeys
+      .map(v => {
+        const parts = v.split(":");
+        let result = parts[1];
+        if (parts[2] === "true") {
+          result += "[]";
+        }
+        return result;
+      })
+      .join(", ");
+    errorMessage += `\n\nThere are unbound output variables: ${varString}.`;
+  }
+
+  return errorMessage;
 }
