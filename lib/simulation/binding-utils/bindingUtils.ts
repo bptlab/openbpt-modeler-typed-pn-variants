@@ -30,9 +30,9 @@ export function getValidInputBindings(
   }
 
   // Step 1: build arcPlaceInfoDict and tokenStructure
-  const arcPlaceInfoDict = buildArcPlaceInfoDict(transition.incoming);
+  const [arcPlaceInfoDict, exactSynchingArcPlaceInfoDict] = buildArcPlaceInfoDict(transition.incoming);
 
-  console.log("Arc Place Info Dict: ", arcPlaceInfoDict);
+  console.log("Arc Place Info Dict: ", arcPlaceInfoDict, "Exact Synching Arc Place Info Dict: ", exactSynchingArcPlaceInfoDict);
 
   // Early return: missing tokens in non-inhibitor arcs
   if (!hasAvailableTokensForAllArcs(arcPlaceInfoDict)) {
@@ -101,7 +101,7 @@ export function getValidInputBindings(
   // Step 5: check for ExactSubsetSynchro constraint
   // This also always enlarges the dataClassKeys to four components
   const synchedInputBindings = checkExactSynchroConstraints(
-    arcPlaceInfoDict,
+    exactSynchingArcPlaceInfoDict,
     filteredInputBindings,
   );
 

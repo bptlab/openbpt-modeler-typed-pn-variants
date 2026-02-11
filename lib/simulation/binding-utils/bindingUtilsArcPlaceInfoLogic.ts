@@ -14,11 +14,13 @@ import {
  * @param incomingArcs - An array of `Arc` objects to process.
  * @returns An `ArcPlaceInfoDict` mapping arc IDs to their `ArcPlaceInfo`.
  */
-export function buildArcPlaceInfoDict(incomingArcs: Arc[]): ArcPlaceInfoDict {
+export function buildArcPlaceInfoDict(incomingArcs: Arc[]): [ArcPlaceInfoDict, ArcPlaceInfoDict] {
   const arcPlaceInfoDict: ArcPlaceInfoDict = {};
+  const exactSynchingArcPlaceInfoDict: ArcPlaceInfoDict = {};
   const existingDataClassCombinations: { [key: string]: string } = {};
   for (const arc of incomingArcs) {
     const arcPlaceInfo = buildArcPlaceInfo(arc);
+    console.log(`Built ArcPlaceInfo for arc ${arc.id}: `, arcPlaceInfo);
 
     // Never merge inhibitor arcs
     if (arcPlaceInfo.isInhibitorArc) {
@@ -26,9 +28,15 @@ export function buildArcPlaceInfoDict(incomingArcs: Arc[]): ArcPlaceInfoDict {
       continue;
     }
 
+    // For exact synchro arcs, also keep track of them in a separate dictionary for later use in checking ExactSubsetSynchro constraints
+    if (arcPlaceInfo.isExactSyncing) {
+      console.log(`Arc ${arc.id} is an exact synchro arc`, arcPlaceInfo);
+      exactSynchingArcPlaceInfoDict[arc.id] = arcPlaceInfo;
+    }
+
     const dataClassCombination = createDataClassCombinationKeyFromDict(
       arcPlaceInfo.dataClassInfoDict,
-    ) + `:${arcPlaceInfo.isExactSyncing}`;
+    );
     if (!existingDataClassCombinations[dataClassCombination]) {
       existingDataClassCombinations[dataClassCombination] = arc.id;
       arcPlaceInfoDict[arc.id] = arcPlaceInfo;
@@ -48,7 +56,7 @@ export function buildArcPlaceInfoDict(incomingArcs: Arc[]): ArcPlaceInfoDict {
         );
     }
   }
-  return arcPlaceInfoDict;
+  return [arcPlaceInfoDict, exactSynchingArcPlaceInfoDict];
 }
 
 /**
@@ -105,10 +113,10 @@ function buildDataClassInfoDict(
  * representation for further simulation or analysis.
  */
 function buildArcPlaceInfo(arc: Arc): ArcPlaceInfo {
-
-  const place: Place = arc.businessObject.source as Place;
-  const isInhibitorArc: boolean = arc.businessObject.isInhibitorArc || false;
-  const isExactSyncing: boolean = arc.businessObject?.isExactSynchronization || false;
+  const arcObject = arc.businessObject;
+  const place: Place = arcObject.source as Place;
+  const isInhibitorArc: boolean = arcObject?.isInhibitorArc || false;
+  const isExactSyncing: boolean = arcObject?.isExactSynchronization || false;
 
   const dataClassInfoDict: {
     [dataClassKey: string]: string[];
@@ -132,6 +140,8 @@ function buildArcPlaceInfo(arc: Arc): ArcPlaceInfo {
   }
 
   const marking = place.marking ?? [];
+  if (isExactSyncing)
+    console.log(`Building ArcPlaceInfo for arc ${arc.id} with marking: `, marking);
   const customMarking: Token[] = [];
   for (const token of marking) {
     const tokenObj: Token = {};
@@ -142,6 +152,7 @@ function buildArcPlaceInfo(arc: Arc): ArcPlaceInfo {
       ).forEach((dataClassKey) => {
         tokenObj[dataClassKey] = value;
         if (!dataClassInfoDict[dataClassKey].includes(value)) {
+          console.log(`Adding value ${value} to data class ${dataClassKey} in ArcPlaceInfo for arc ${arc.id}`);
           dataClassInfoDict[dataClassKey].push(value);
         }
       }
@@ -149,6 +160,9 @@ function buildArcPlaceInfo(arc: Arc): ArcPlaceInfo {
     }
     customMarking.push(tokenObj);
   }
+
+  if (isExactSyncing)
+    console.log(`Custom marking: `, customMarking);
 
   return {
     arcId: arc.id,
