@@ -1,4 +1,3 @@
-import { filter } from "min-dash";
 import {
   buildArcPlaceInfoDict,
   getBindingPerDataClassFromNonLinkingArcs,
@@ -19,11 +18,11 @@ import {
   getDataClassesNotInLinks,
   getTokenPerLink,
 } from "./bindingUtilsLinkingLogic";
-import { json } from "stream/consumers";
 
 export function getValidInputBindings(
   transition: Transition,
 ): BindingPerDataClass[] {
+  console.log(`Computing valid input bindings for transition ${transition.id}...`);
   // Early return: structural incorrect
   if (isStructurallyIncorrect(transition.incoming, transition.outgoing)[0]) {
     // console.log(`Transition ${transition.id} has unbound output variables.`);
@@ -33,7 +32,7 @@ export function getValidInputBindings(
   // Step 1: build arcPlaceInfoDict and tokenStructure
   const arcPlaceInfoDict = buildArcPlaceInfoDict(transition.incoming);
 
-  //console.log(`Transition ${transition.id} arcPlaceInfoDict: ${JSON.stringify(arcPlaceInfoDict)}`);
+  console.log("Arc Place Info Dict: ", arcPlaceInfoDict);
 
   // Early return: missing tokens in non-inhibitor arcs
   if (!hasAvailableTokensForAllArcs(arcPlaceInfoDict)) {
@@ -50,8 +49,6 @@ export function getValidInputBindings(
   // Step 3: compute bindings
   const bindingPerDataClassFromNonLinkingArcs =
     getBindingPerDataClassFromNonLinkingArcs(nonInhibitorArcs);
-
-  //console.log(`Transition ${transition.id} biggest links: ${JSON.stringify(tokenPerLink)}`);
 
   let validInputBindings: BindingPerDataClass[];
 
@@ -93,7 +90,7 @@ export function getValidInputBindings(
     validInputBindings = cartesianProductBindings(bindingCandidatesPerLink);
   }
 
-  console.log(`Transition ${transition.id} has ${JSON.stringify(validInputBindings)} valid input bindings before filtering by inhibitors and checking ExactSubsetSynchro constraints.`);
+  console.log("Valid Input Bindings before inhibitor filtering: ", validInputBindings);
 
   // Step 4: eliminate bindings blocked by inhibitors
   const filteredInputBindings = filterBindingsByInhibitors(
@@ -108,7 +105,7 @@ export function getValidInputBindings(
     filteredInputBindings,
   );
 
-  console.log(`Transition ${transition.id} has ${JSON.stringify(synchedInputBindings)} valid input bindings.`);
+  console.log("Synched Input Bindings: ", synchedInputBindings);
 
   return synchedInputBindings;
 }
