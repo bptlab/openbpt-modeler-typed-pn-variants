@@ -20,7 +20,6 @@ export function buildArcPlaceInfoDict(incomingArcs: Arc[]): [ArcPlaceInfoDict, A
   const existingDataClassCombinations: { [key: string]: string } = {};
   for (const arc of incomingArcs) {
     const arcPlaceInfo = buildArcPlaceInfo(arc);
-    console.log(`Built ArcPlaceInfo for arc ${arc.id}: `, arcPlaceInfo);
 
     // Never merge inhibitor arcs
     if (arcPlaceInfo.isInhibitorArc) {
@@ -30,8 +29,7 @@ export function buildArcPlaceInfoDict(incomingArcs: Arc[]): [ArcPlaceInfoDict, A
 
     // For exact synchro arcs, also keep track of them in a separate dictionary for later use in checking ExactSubsetSynchro constraints
     if (arcPlaceInfo.isExactSyncing) {
-      console.log(`Arc ${arc.id} is an exact synchro arc`, arcPlaceInfo);
-      exactSynchingArcPlaceInfoDict[arc.id] = arcPlaceInfo;
+      exactSynchingArcPlaceInfoDict[arc.id] = Object.assign({}, arcPlaceInfo);
     }
 
     const dataClassCombination = createDataClassCombinationKeyFromDict(
@@ -140,8 +138,6 @@ function buildArcPlaceInfo(arc: Arc): ArcPlaceInfo {
   }
 
   const marking = place.marking ?? [];
-  if (isExactSyncing)
-    console.log(`Building ArcPlaceInfo for arc ${arc.id} with marking: `, marking);
   const customMarking: Token[] = [];
   for (const token of marking) {
     const tokenObj: Token = {};
@@ -152,7 +148,6 @@ function buildArcPlaceInfo(arc: Arc): ArcPlaceInfo {
       ).forEach((dataClassKey) => {
         tokenObj[dataClassKey] = value;
         if (!dataClassInfoDict[dataClassKey].includes(value)) {
-          console.log(`Adding value ${value} to data class ${dataClassKey} in ArcPlaceInfo for arc ${arc.id}`);
           dataClassInfoDict[dataClassKey].push(value);
         }
       }
@@ -160,9 +155,6 @@ function buildArcPlaceInfo(arc: Arc): ArcPlaceInfo {
     }
     customMarking.push(tokenObj);
   }
-
-  if (isExactSyncing)
-    console.log(`Custom marking: `, customMarking);
 
   return {
     arcId: arc.id,

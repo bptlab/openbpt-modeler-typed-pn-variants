@@ -22,7 +22,6 @@ import {
 export function getValidInputBindings(
   transition: Transition,
 ): BindingPerDataClass[] {
-  console.log(`Computing valid input bindings for transition ${transition.id}...`);
   // Early return: structural incorrect
   if (isStructurallyIncorrect(transition.incoming, transition.outgoing)[0]) {
     // console.log(`Transition ${transition.id} has unbound output variables.`);
@@ -31,8 +30,6 @@ export function getValidInputBindings(
 
   // Step 1: build arcPlaceInfoDict and tokenStructure
   const [arcPlaceInfoDict, exactSynchingArcPlaceInfoDict] = buildArcPlaceInfoDict(transition.incoming);
-
-  console.log("Arc Place Info Dict: ", arcPlaceInfoDict, "Exact Synching Arc Place Info Dict: ", exactSynchingArcPlaceInfoDict);
 
   // Early return: missing tokens in non-inhibitor arcs
   if (!hasAvailableTokensForAllArcs(arcPlaceInfoDict)) {
@@ -90,8 +87,6 @@ export function getValidInputBindings(
     validInputBindings = cartesianProductBindings(bindingCandidatesPerLink);
   }
 
-  console.log("Valid Input Bindings before inhibitor filtering: ", validInputBindings);
-
   // Step 4: eliminate bindings blocked by inhibitors
   const filteredInputBindings = filterBindingsByInhibitors(
     validInputBindings,
@@ -104,8 +99,6 @@ export function getValidInputBindings(
     exactSynchingArcPlaceInfoDict,
     filteredInputBindings,
   );
-
-  console.log("Synched Input Bindings: ", synchedInputBindings);
 
   return synchedInputBindings;
 }

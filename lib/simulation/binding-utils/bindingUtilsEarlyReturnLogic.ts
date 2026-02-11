@@ -1,21 +1,17 @@
-import { has } from "min-dash";
 import { getDataClassKey } from "./bindingUtilsHelper";
-import { create } from "domain";
-import { error } from "console";
+
 
 /**
- * Determines whether there are unbound output variables based on the provided incoming and outgoing arcs.
+ * Checks whether the structure of the provided arcs is incorrect according to several criteria:
+ * - Filters out inhibitor arcs from both incoming and outgoing arcs.
+ * - Detects arcs without associated data classes.
+ * - Identifies duplicate sources and targets among the arcs.
+ * - Determines if there are unbound output data class keys (i.e., output keys not present in input keys).
  *
- * This function filters out inhibitor arcs from both incoming and outgoing arcs, then analyzes the data class keys
- * associated with each arc's inscription elements. It checks if there are any output data class keys that are not
- * present in the input data class keys, indicating unbound output variables. It also considers arcs with only generated
- * inscription elements and handles structurally incorrect arcs (e.g., missing inscription elements).
- *
- * @param incomingArcs - The list of incoming arcs to the node, each potentially carrying data class keys.
- * @param outgoingArcs - The list of outgoing arcs from the node, each potentially carrying data class keys.
- * @returns A tuple:
- *   - The first element is a boolean indicating whether the structure is incorrect.
- *   - The second element is an array of string keys representing the unbound output data class keys.
+ * @param incomingArcs - The list of incoming arcs to check, excluding inhibitor arcs.
+ * @param outgoingArcs - The list of outgoing arcs to check, excluding inhibitor arcs.
+ * @returns A tuple where the first element is a boolean indicating structural incorrectness,
+ *          and the second element is a message describing the reason(s) for incorrectness.
  */
 export function isStructurallyIncorrect(
   incomingArcs: Arc[],
