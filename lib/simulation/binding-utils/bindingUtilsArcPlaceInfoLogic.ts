@@ -12,7 +12,7 @@ import {
  * If a combination already exists, merges tokens into the existing `ArcPlaceInfo` and updates its data class info.
  *
  * @param incomingArcs - An array of `Arc` objects to process.
- * @returns An `ArcPlaceInfoDict` mapping arc IDs to their `ArcPlaceInfo`.
+ * @returns A tuple `[ArcPlaceInfoDict, ArcPlaceInfoDict]` where the first dictionary contains merged arc info for all relevant arcs, and the second dictionary contains arc info for exact-syncing arcs only.
  */
 export function buildArcPlaceInfoDict(incomingArcs: Arc[]): [ArcPlaceInfoDict, ArcPlaceInfoDict] {
   const arcPlaceInfoDict: ArcPlaceInfoDict = {};

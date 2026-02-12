@@ -67,12 +67,14 @@ export function isStructurallyIncorrect(
     duplicateSources.length > 0 ||
     hasUnboundByDataClassKey;
 
-  const message = createStructuralIncorrectnessMessage(
-    hasArcsWithoutDataClass,
-    duplicateSources,
-    duplicateTargets,
-    unboundOutputDataClassKeys
-  );
+  const message = isStructurallyIncorrect
+    ? createStructuralIncorrectnessMessage(
+        hasArcsWithoutDataClass,
+        duplicateSources,
+        duplicateTargets,
+        unboundOutputDataClassKeys,
+      )
+    : "";
 
   return [isStructurallyIncorrect, message];
 }
@@ -108,7 +110,7 @@ function createStructuralIncorrectnessMessage(
     errorMessage += "\n\nPlease add at least one data class to all places.";
   }
   if (duplicateSources.length > 0 || duplicateTargets.length > 0) {
-    errorMessage += `\n\nEach place should have maximally one arc towards and from each transition.`;
+    errorMessage += `\n\nEach place should have at most one arc towards and from each transition.`;
   } if (duplicateSources.length > 0) {
     errorMessage += `\nThere are multiple incoming arcs from each of: [${Array.from(new Set(duplicateSources.map(s => s.name.length > 0 ? s.name : s.id))).join(", ")}].`;
   } if (duplicateTargets.length > 0) {
