@@ -4,7 +4,7 @@ interface ModelElement {
 }
 
 interface Node extends ModelElement {
-  name: string;
+  name?: string;
 }
 
 interface Transition extends Node {
