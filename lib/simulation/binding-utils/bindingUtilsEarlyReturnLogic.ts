@@ -74,7 +74,7 @@ export function isStructurallyIncorrect(
         duplicateTargets,
         unboundOutputDataClassKeys,
       )
-    : "";
+    : "This transition is structurally correct.";
 
   return [isStructurallyIncorrect, message];
 }
