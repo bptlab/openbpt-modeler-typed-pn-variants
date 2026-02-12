@@ -1,23 +1,23 @@
 import {
   buildArcPlaceInfoDict,
   getBindingPerDataClassFromNonLinkingArcs,
-} from "./bindingUtilsArcPlaceInfoLogic";
+} from "./arcPlaceInfoLogic";
 import {
   hasAvailableTokensForAllArcs,
   hasUnboundOutputVariables,
-} from "./bindingUtilsEarlyReturnLogic";
-import { checkExactSynchroConstraints } from "./bindingUtilsExactSynchro";
+} from "./earlyReturnLogic";
+import { checkExactSynchroConstraints } from "./exactSynchro";
 import {
   getNonInhibitorArcs,
   filterBindingsByInhibitors
-} from "./bindingUtilsInhibitorLogic";
+} from "./inhibitorLogic";
 import {
   cartesianProductBindings,
   getBiggestLinks,
   getBindingsForLink,
   getDataClassesNotInLinks,
   getTokenPerLink,
-} from "./bindingUtilsLinkingLogic";
+} from "./linkingLogic";
 
 export function getValidInputBindings(
   transition: Transition,

@@ -1,5 +1,5 @@
-import { getLinkPartFromDataClassKey } from "./bindingUtilsHelper";
-import { groupTokensByNonVariableDataclasses } from "./bindingUtilsLinkingLogic";
+import { getLinkPartFromDataClassKey } from "./helper";
+import { groupTokensByNonVariableDataclasses } from "./linkingLogic";
 
 export function checkExactSynchroConstraints(
   arcPlaceInfoDict: ArcPlaceInfoDict,

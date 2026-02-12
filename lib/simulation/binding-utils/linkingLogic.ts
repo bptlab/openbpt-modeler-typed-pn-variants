@@ -4,7 +4,7 @@ import {
   getDataClassKey,
   getLinkPartFromDataClassKey,
   tokensOverlap,
-} from "./bindingUtilsHelper";
+} from "./helper";
 
 /**
  * Finds and returns the largest (non-overlapping and non-subset) links from the given arc-place information dictionary.

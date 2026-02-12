@@ -1,4 +1,4 @@
-import { getDataClassKey } from "./bindingUtilsHelper";
+import { getDataClassKey } from "./helper";
 
 /**
  * Determines whether there are unbound output variables based on the provided incoming and outgoing arcs.
