@@ -1,16 +1,14 @@
-import { getLinkPartFromDataClassKey } from "./helper";
+import { getLinkPartFromDataClassKey } from "./helpers";
 import { groupTokensByNonVariableDataclasses } from "./linkingLogic";
 
 export function checkExactSynchroConstraints(
-  arcPlaceInfoDict: ArcPlaceInfoDict,
+  exactSynchingArcPlaceInfoDict: ArcPlaceInfoDict,
   validInputBindings: BindingPerDataClass[],
 ): BindingPerDataClass[] {
   let synchedInputBindings: BindingPerDataClass[] = [];
   let tokenDictPerArc: { arcId: string, groupedTokens: GroupedTokens, dataClassInfoDict: DataClassInfoDict }[] = [];
 
-  const exactSynchroArcPlaceInfos = Object.entries(arcPlaceInfoDict).filter(
-    ([_, arcPlaceInfo]) => arcPlaceInfo.isExactSyncing,
-  );
+  const exactSynchroArcPlaceInfos = Object.entries(exactSynchingArcPlaceInfoDict);
 
   if (exactSynchroArcPlaceInfos.length === 0) {
     return validInputBindings;
@@ -76,7 +74,7 @@ export function checkExactSynchroConstraints(
         }
       }
     }
-    
+
     // ... and merge the results.
     let synchedBindings: BindingPerDataClass = {};
     const groupedByKey: { [key: string]: BindingPerDataClassWithSynchro[] } = {};
@@ -100,7 +98,7 @@ export function checkExactSynchroConstraints(
         if (maxEntry.values.length > 0) {
           synchedBindings[dataClassKey + ":exact"] = maxEntry.values;
         }
-      } 
+      }
       if (nonExactSyncEntries.length > 0) {
         // Pick the one with the smallest values array
         const minEntry = nonExactSyncEntries.reduce((prev, curr) =>
@@ -112,9 +110,9 @@ export function checkExactSynchroConstraints(
       }
     }
     if (Object.keys(synchedBindings).length > 0) {
-      synchedInputBindings.push({...synchedBindings});
+      synchedInputBindings.push({ ...synchedBindings });
     }
-  } 
+  }
 
   return synchedInputBindings;
 }

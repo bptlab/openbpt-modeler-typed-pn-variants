@@ -3,7 +3,9 @@ interface ModelElement {
   id: string;
 }
 
-interface Node extends ModelElement {}
+interface Node extends ModelElement {
+  name?: string;
+}
 
 interface Transition extends Node {
   incoming: Arc[];

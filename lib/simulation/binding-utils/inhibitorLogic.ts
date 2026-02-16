@@ -3,7 +3,7 @@ import {
   getAllDataClassKeysFromArcs,
   getBaseDataClassKey,
   getDataClassKey,
-} from "./helper";
+} from "./helpers";
 
 /**
  * Filters and returns only the non-inhibitor arcs from the provided arc-place information dictionary.

@@ -3,7 +3,7 @@ import {
   getDataClassFromKey,
   getDataClassKey,
   tokensEqual,
-} from "./helper";
+} from "./helpers";
 
 /**
  * Builds a dictionary mapping arc IDs to their corresponding `ArcPlaceInfo` objects.
@@ -12,10 +12,11 @@ import {
  * If a combination already exists, merges tokens into the existing `ArcPlaceInfo` and updates its data class info.
  *
  * @param incomingArcs - An array of `Arc` objects to process.
- * @returns An `ArcPlaceInfoDict` mapping arc IDs to their `ArcPlaceInfo`.
+ * @returns A tuple `[ArcPlaceInfoDict, ArcPlaceInfoDict]` where the first dictionary contains merged arc info for all relevant arcs, and the second dictionary contains arc info for exact-syncing arcs only.
  */
-export function buildArcPlaceInfoDict(incomingArcs: Arc[]): ArcPlaceInfoDict {
+export function buildArcPlaceInfoDict(incomingArcs: Arc[]): [ArcPlaceInfoDict, ArcPlaceInfoDict] {
   const arcPlaceInfoDict: ArcPlaceInfoDict = {};
+  const exactSynchingArcPlaceInfoDict: ArcPlaceInfoDict = {};
   const existingDataClassCombinations: { [key: string]: string } = {};
   for (const arc of incomingArcs) {
     const arcPlaceInfo = buildArcPlaceInfo(arc);
@@ -26,9 +27,14 @@ export function buildArcPlaceInfoDict(incomingArcs: Arc[]): ArcPlaceInfoDict {
       continue;
     }
 
+    // For exact synchro arcs, also keep track of them in a separate dictionary for later use in checking ExactSubsetSynchro constraints
+    if (arcPlaceInfo.isExactSyncing) {
+      exactSynchingArcPlaceInfoDict[arc.id] = Object.assign({}, arcPlaceInfo);
+    }
+
     const dataClassCombination = createDataClassCombinationKeyFromDict(
       arcPlaceInfo.dataClassInfoDict,
-    ) + `:${arcPlaceInfo.isExactSyncing}`;
+    );
     if (!existingDataClassCombinations[dataClassCombination]) {
       existingDataClassCombinations[dataClassCombination] = arc.id;
       arcPlaceInfoDict[arc.id] = arcPlaceInfo;
@@ -48,7 +54,7 @@ export function buildArcPlaceInfoDict(incomingArcs: Arc[]): ArcPlaceInfoDict {
         );
     }
   }
-  return arcPlaceInfoDict;
+  return [arcPlaceInfoDict, exactSynchingArcPlaceInfoDict];
 }
 
 /**
@@ -105,10 +111,10 @@ function buildDataClassInfoDict(
  * representation for further simulation or analysis.
  */
 function buildArcPlaceInfo(arc: Arc): ArcPlaceInfo {
-
-  const place: Place = arc.businessObject.source as Place;
-  const isInhibitorArc: boolean = arc.businessObject.isInhibitorArc || false;
-  const isExactSyncing: boolean = arc.businessObject?.isExactSynchronization || false;
+  const arcObject = arc.businessObject;
+  const place: Place = arcObject.source as Place;
+  const isInhibitorArc: boolean = arcObject?.isInhibitorArc || false;
+  const isExactSyncing: boolean = arcObject?.isExactSynchronization || false;
 
   const dataClassInfoDict: {
     [dataClassKey: string]: string[];

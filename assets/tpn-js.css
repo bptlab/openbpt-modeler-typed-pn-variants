@@ -48,11 +48,11 @@
   background: #e0e0e0;
 }
 
-.unbound-output-overlay {
+.structurally-incorrect-overlay {
   position: relative;
 }
 
-.unbound-output-tooltip {
+.structurally-incorrect-tooltip {
   position: absolute;
   bottom: 120%;
   left: 50%;
@@ -72,6 +72,6 @@
   transition: opacity 0.1s ease-in-out;
 }
 
-.unbound-output-overlay:hover .unbound-output-tooltip {
+.structurally-incorrect-overlay:hover .structurally-incorrect-tooltip {
   opacity: 1;
 }
