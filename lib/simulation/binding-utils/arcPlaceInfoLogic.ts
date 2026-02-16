@@ -3,7 +3,7 @@ import {
   getDataClassFromKey,
   getDataClassKey,
   tokensEqual,
-} from "./bindingUtilsHelper";
+} from "./helpers";
 
 /**
  * Builds a dictionary mapping arc IDs to their corresponding `ArcPlaceInfo` objects.

@@ -1,5 +1,5 @@
-import { getLinkPartFromDataClassKey } from "./bindingUtilsHelper";
-import { groupTokensByNonVariableDataclasses } from "./bindingUtilsLinkingLogic";
+import { getLinkPartFromDataClassKey } from "./helpers";
+import { groupTokensByNonVariableDataclasses } from "./linkingLogic";
 
 export function checkExactSynchroConstraints(
   exactSynchingArcPlaceInfoDict: ArcPlaceInfoDict,
@@ -74,7 +74,7 @@ export function checkExactSynchroConstraints(
         }
       }
     }
-    
+
     // ... and merge the results.
     let synchedBindings: BindingPerDataClass = {};
     const groupedByKey: { [key: string]: BindingPerDataClassWithSynchro[] } = {};
@@ -98,7 +98,7 @@ export function checkExactSynchroConstraints(
         if (maxEntry.values.length > 0) {
           synchedBindings[dataClassKey + ":exact"] = maxEntry.values;
         }
-      } 
+      }
       if (nonExactSyncEntries.length > 0) {
         // Pick the one with the smallest values array
         const minEntry = nonExactSyncEntries.reduce((prev, curr) =>
@@ -110,9 +110,9 @@ export function checkExactSynchroConstraints(
       }
     }
     if (Object.keys(synchedBindings).length > 0) {
-      synchedInputBindings.push({...synchedBindings});
+      synchedInputBindings.push({ ...synchedBindings });
     }
-  } 
+  }
 
   return synchedInputBindings;
 }

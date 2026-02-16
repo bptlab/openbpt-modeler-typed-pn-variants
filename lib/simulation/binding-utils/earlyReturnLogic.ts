@@ -1,4 +1,4 @@
-import { getDataClassKey } from "./bindingUtilsHelper";
+import { getDataClassKey } from "./helpers";
 
 
 /**
@@ -69,11 +69,11 @@ export function isStructurallyIncorrect(
 
   const message = isStructurallyIncorrect
     ? createStructuralIncorrectnessMessage(
-        hasArcsWithoutDataClass,
-        duplicateSources,
-        duplicateTargets,
-        unboundOutputDataClassKeys,
-      )
+      hasArcsWithoutDataClass,
+      duplicateSources,
+      duplicateTargets,
+      unboundOutputDataClassKeys,
+    )
     : "This transition is structurally correct.";
 
   return [isStructurallyIncorrect, message];
