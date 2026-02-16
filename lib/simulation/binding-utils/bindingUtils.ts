@@ -4,7 +4,7 @@ import {
 } from "./bindingUtilsArcPlaceInfoLogic";
 import {
   hasAvailableTokensForAllArcs,
-  hasUnboundOutputVariables,
+  isStructurallyIncorrect,
 } from "./bindingUtilsEarlyReturnLogic";
 import { checkExactSynchroConstraints } from "./bindingUtilsExactSynchro";
 import {
@@ -22,14 +22,14 @@ import {
 export function getValidInputBindings(
   transition: Transition,
 ): BindingPerDataClass[] {
-  // Early return: unbound output variables
-  if (hasUnboundOutputVariables(transition.incoming, transition.outgoing)[0]) {
+  // Early return: structural incorrect
+  if (isStructurallyIncorrect(transition.incoming, transition.outgoing)[0]) {
     // console.log(`Transition ${transition.id} has unbound output variables.`);
     return [];
   }
 
   // Step 1: build arcPlaceInfoDict and tokenStructure
-  const arcPlaceInfoDict = buildArcPlaceInfoDict(transition.incoming);
+  const [arcPlaceInfoDict, exactSynchingArcPlaceInfoDict] = buildArcPlaceInfoDict(transition.incoming);
 
   // Early return: missing tokens in non-inhibitor arcs
   if (!hasAvailableTokensForAllArcs(arcPlaceInfoDict)) {
@@ -96,7 +96,7 @@ export function getValidInputBindings(
   // Step 5: check for ExactSubsetSynchro constraint
   // This also always enlarges the dataClassKeys to four components
   const synchedInputBindings = checkExactSynchroConstraints(
-    arcPlaceInfoDict,
+    exactSynchingArcPlaceInfoDict,
     filteredInputBindings,
   );
 

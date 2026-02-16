@@ -2,15 +2,13 @@ import { getLinkPartFromDataClassKey } from "./bindingUtilsHelper";
 import { groupTokensByNonVariableDataclasses } from "./bindingUtilsLinkingLogic";
 
 export function checkExactSynchroConstraints(
-  arcPlaceInfoDict: ArcPlaceInfoDict,
+  exactSynchingArcPlaceInfoDict: ArcPlaceInfoDict,
   validInputBindings: BindingPerDataClass[],
 ): BindingPerDataClass[] {
   let synchedInputBindings: BindingPerDataClass[] = [];
   let tokenDictPerArc: { arcId: string, groupedTokens: GroupedTokens, dataClassInfoDict: DataClassInfoDict }[] = [];
 
-  const exactSynchroArcPlaceInfos = Object.entries(arcPlaceInfoDict).filter(
-    ([_, arcPlaceInfo]) => arcPlaceInfo.isExactSyncing,
-  );
+  const exactSynchroArcPlaceInfos = Object.entries(exactSynchingArcPlaceInfoDict);
 
   if (exactSynchroArcPlaceInfos.length === 0) {
     return validInputBindings;
