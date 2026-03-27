@@ -80,4 +80,8 @@ type BindingPerDataClass = { [DataClassKey: string]: string[] };
 
 type GroupedTokens = { [dataClassCombinationKey: string]: BindingPerDataClass };
 
-type BindingPerDataClassWithSynchro = {DataClassKey: string, isExactSync: boolean, values: string[] };
+type BindingPerDataClassWithSynchro = {
+  DataClassKey: string;
+  isExactSync: boolean;
+  values: string[];
+};
