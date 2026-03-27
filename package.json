@@ -1,10 +1,10 @@
 {
-  "name": "openbpt-typed-pn-variants-modeler",
-  "version": "0.0.1",
+  "name": "openbpt-modeler-typed-pn-variants",
+  "version": "1.0.0",
   "description": "Modeler supporting OCPNs, t-PNIDs, OPIDs, and DOPIDs.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bptlab/openbpt-typed-pn-variants-modeler"
+    "url": "https://github.com/bptlab/openbpt-modeler-typed-pn-variants"
   },
   "author": "Maximilian König",
   "license": "MIT",
@@ -19,7 +19,6 @@
     "DOPID"
   ],
   "main": "dist/index.js",
-  "type": "module",
   "exports": {
     "./dist/lib/CustomModeler": "./dist/lib/CustomModeler.js",
     "./dist/lib/NavigatedViewer": "./dist/lib/NavigatedViewer.js",
