@@ -6,9 +6,15 @@ export function checkExactSynchroConstraints(
   validInputBindings: BindingPerDataClass[],
 ): BindingPerDataClass[] {
   let synchedInputBindings: BindingPerDataClass[] = [];
-  let tokenDictPerArc: { arcId: string, groupedTokens: GroupedTokens, dataClassInfoDict: DataClassInfoDict }[] = [];
+  let tokenDictPerArc: {
+    arcId: string;
+    groupedTokens: GroupedTokens;
+    dataClassInfoDict: DataClassInfoDict;
+  }[] = [];
 
-  const exactSynchroArcPlaceInfos = Object.entries(exactSynchingArcPlaceInfoDict);
+  const exactSynchroArcPlaceInfos = Object.entries(
+    exactSynchingArcPlaceInfoDict,
+  );
 
   if (exactSynchroArcPlaceInfos.length === 0) {
     return validInputBindings;
@@ -16,12 +22,16 @@ export function checkExactSynchroConstraints(
 
   for (const [arcId, arcPlaceInfo] of exactSynchroArcPlaceInfos) {
     const groupedTokens = groupTokensByNonVariableDataclasses(
-      Object.keys(arcPlaceInfo.dataClassInfoDict).map(
-        (dataClassKey) => getLinkPartFromDataClassKey(dataClassKey),
+      Object.keys(arcPlaceInfo.dataClassInfoDict).map((dataClassKey) =>
+        getLinkPartFromDataClassKey(dataClassKey),
       ),
       arcPlaceInfo.tokens,
     );
-    tokenDictPerArc.push({ arcId, groupedTokens, dataClassInfoDict: arcPlaceInfo.dataClassInfoDict });
+    tokenDictPerArc.push({
+      arcId,
+      groupedTokens,
+      dataClassInfoDict: arcPlaceInfo.dataClassInfoDict,
+    });
   }
 
   // For each input Binding ...
@@ -37,10 +47,14 @@ export function checkExactSynchroConstraints(
           const bindingValues = inputBinding[dataClassKey] ?? [];
           countAny += tokenValues.some((tokenValue) =>
             bindingValues.includes(tokenValue),
-          ) ? 1 : 0;
+          )
+            ? 1
+            : 0;
           countAll += tokenValues.every((tokenValue) =>
             bindingValues.includes(tokenValue),
-          ) ? 1 : 0;
+          )
+            ? 1
+            : 0;
         }
       }
       if (countAny === 0 || (countAny > 0 && countAny !== countAll)) {
@@ -56,8 +70,12 @@ export function checkExactSynchroConstraints(
           });
           continue;
         }
-        const syncedValues = (tokenDict.dataClassInfoDict[dataClassKey] ?? []).filter(value => tokenValues.includes(value));
-        const unsynchedValues = tokenValues.filter((value => !syncedValues.includes(value)));
+        const syncedValues = (
+          tokenDict.dataClassInfoDict[dataClassKey] ?? []
+        ).filter((value) => tokenValues.includes(value));
+        const unsynchedValues = tokenValues.filter(
+          (value) => !syncedValues.includes(value),
+        );
         if (syncedValues.length > 0) {
           currentSynchedBinding.push({
             DataClassKey: dataClassKey,
@@ -77,7 +95,8 @@ export function checkExactSynchroConstraints(
 
     // ... and merge the results.
     let synchedBindings: BindingPerDataClass = {};
-    const groupedByKey: { [key: string]: BindingPerDataClassWithSynchro[] } = {};
+    const groupedByKey: { [key: string]: BindingPerDataClassWithSynchro[] } =
+      {};
 
     for (const entry of currentSynchedBinding) {
       if (!groupedByKey[entry.DataClassKey]) {
@@ -87,13 +106,13 @@ export function checkExactSynchroConstraints(
     }
 
     for (const [dataClassKey, entries] of Object.entries(groupedByKey)) {
-      const exactSyncEntries = entries.filter(e => e.isExactSync);
-      const nonExactSyncEntries = entries.filter(e => !e.isExactSync);
+      const exactSyncEntries = entries.filter((e) => e.isExactSync);
+      const nonExactSyncEntries = entries.filter((e) => !e.isExactSync);
 
       if (exactSyncEntries.length > 0) {
         // Pick the one with the largest values array
         const maxEntry = exactSyncEntries.reduce((prev, curr) =>
-          curr.values.length > prev.values.length ? curr : prev
+          curr.values.length > prev.values.length ? curr : prev,
         );
         if (maxEntry.values.length > 0) {
           synchedBindings[dataClassKey + ":exact"] = maxEntry.values;
@@ -102,7 +121,7 @@ export function checkExactSynchroConstraints(
       if (nonExactSyncEntries.length > 0) {
         // Pick the one with the smallest values array
         const minEntry = nonExactSyncEntries.reduce((prev, curr) =>
-          curr.values.length < prev.values.length ? curr : prev
+          curr.values.length < prev.values.length ? curr : prev,
         );
         if (minEntry.values.length > 0) {
           synchedBindings[dataClassKey + ":subset"] = minEntry.values;

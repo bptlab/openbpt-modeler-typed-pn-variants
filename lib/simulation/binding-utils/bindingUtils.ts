@@ -9,7 +9,7 @@ import {
 import { checkExactSynchroConstraints } from "./exactSynchro";
 import {
   getNonInhibitorArcs,
-  filterBindingsByInhibitors
+  filterBindingsByInhibitors,
 } from "./inhibitorLogic";
 import {
   cartesianProductBindings,
@@ -29,7 +29,8 @@ export function getValidInputBindings(
   }
 
   // Step 1: build arcPlaceInfoDict and tokenStructure
-  const [arcPlaceInfoDict, exactSynchingArcPlaceInfoDict] = buildArcPlaceInfoDict(transition.incoming);
+  const [arcPlaceInfoDict, exactSynchingArcPlaceInfoDict] =
+    buildArcPlaceInfoDict(transition.incoming);
 
   // Early return: missing tokens in non-inhibitor arcs
   if (!hasAvailableTokensForAllArcs(arcPlaceInfoDict)) {

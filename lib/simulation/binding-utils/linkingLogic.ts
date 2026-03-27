@@ -79,9 +79,7 @@ function getAllLinks(arcPlaceInfoDict: ArcPlaceInfoDict): Link[] {
   for (const arcPlaceInfo of Object.values(arcPlaceInfoDict)) {
     if (!arcPlaceInfo.isLinkingPlace) continue;
     const link: Link = [];
-    for (const dataClassKey of Object.keys(
-      arcPlaceInfo.dataClassInfoDict,
-    )) {
+    for (const dataClassKey of Object.keys(arcPlaceInfo.dataClassInfoDict)) {
       link.push(getLinkPartFromDataClassKey(dataClassKey));
     }
     allLinks.push(link);
@@ -498,4 +496,3 @@ export function getDataClassesNotInLinks(
   }
   return dataClassesNotInLinks;
 }
-

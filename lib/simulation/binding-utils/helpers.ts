@@ -92,9 +92,7 @@ export function createDataClassCombinationKeyFromDict(dataClassInfoDict: {
   [dataClassKey: string]: string[];
 }): string {
   let key: string = "";
-  for (const dataClassKey of Object.keys(
-    dataClassInfoDict,
-  ).sort()) {
+  for (const dataClassKey of Object.keys(dataClassInfoDict).sort()) {
     key += dataClassKey + "::";
   }
   return key.endsWith("::") ? key.slice(0, -2) : key;
@@ -136,11 +134,15 @@ export function createDataClassCombinationKeyFromLink(link: Link): string {
  * @returns An object containing the `id` and `alias` extracted from the key.
  */
 export function getDataClassFromKey(dataClassKey: string): DataClass {
-  const [id, alias, isVariableStr] = dataClassKey.split(":");
+  const [id, alias] = dataClassKey.split(":");
   return { id, alias };
 }
 
-export function getLinkPartFromDataClassKey(dataClassKey: string): { id: string; alias: string; isVariable: boolean } {
+export function getLinkPartFromDataClassKey(dataClassKey: string): {
+  id: string;
+  alias: string;
+  isVariable: boolean;
+} {
   const [id, alias, isVariableStr] = dataClassKey.split(":");
   return { id: id, alias: alias, isVariable: isVariableStr === "true" };
 }
@@ -155,10 +157,9 @@ export function getAllDataClassKeysFromArcs(
   arcPlaceInfoDict: ArcPlaceInfoDict,
 ): Set<string> {
   return new Set(
-    Object.values(arcPlaceInfoDict)
-      .flatMap((arcPlaceInfo) =>
-        Object.keys(arcPlaceInfo.dataClassInfoDict)
-      ),
+    Object.values(arcPlaceInfoDict).flatMap((arcPlaceInfo) =>
+      Object.keys(arcPlaceInfo.dataClassInfoDict),
+    ),
   );
 }
 

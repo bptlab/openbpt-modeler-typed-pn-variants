@@ -1,9 +1,5 @@
 import { has } from "min-dash";
-import {
-  getAllDataClassKeysFromArcs,
-  getBaseDataClassKey,
-  getDataClassKey,
-} from "./helpers";
+import { getAllDataClassKeysFromArcs, getBaseDataClassKey } from "./helpers";
 
 /**
  * Filters and returns only the non-inhibitor arcs from the provided arc-place information dictionary.
@@ -59,14 +55,10 @@ function isRelevant(
     Array.from(incomingDataClassKeys).map(getBaseDataClassKey),
   );
 
-  return Object.keys(arcPlaceInfo.dataClassInfoDict).every(
-    (dataClassKey) => {
-      const baseKey = getBaseDataClassKey(
-        dataClassKey,
-      );
-      return incomingBaseDataClassKeys.has(baseKey);
-    },
-  );
+  return Object.keys(arcPlaceInfo.dataClassInfoDict).every((dataClassKey) => {
+    const baseKey = getBaseDataClassKey(dataClassKey);
+    return incomingBaseDataClassKeys.has(baseKey);
+  });
 }
 
 /**
@@ -100,16 +92,15 @@ function getInhibitorTokens(
   return inhibitorTokens;
 }
 
-
 /**
  * Filters bindings by removing or modifying them based on inhibitor tokens.
- * 
+ *
  * For each inhibitor token, this function:
  * 1. Checks if all inhibitor token values exist in a binding's data
  * 2. If they match, removes the inhibitor token values from that binding
  * 3. Removes the entire binding if any key becomes empty after filtering
  * 4. Keeps bindings that don't match the inhibitor token criteria
- * 
+ *
  * @param bindings - The array of bindings to filter
  * @param inhibitorTokens - The array of inhibitor tokens used to filter the bindings
  * @returns A new array of filtered bindings with inhibitor token values removed
@@ -126,7 +117,9 @@ function getFilteredBindings(
     for (const binding of filteredBindings) {
       let allMatch = true;
       for (const key of Object.keys(inhibitorToken)) {
-        const bindingValues = (binding[key + ":false"] || []).concat(binding[key + ":true"] || []);
+        const bindingValues = (binding[key + ":false"] || []).concat(
+          binding[key + ":true"] || [],
+        );
         if (!inhibitorToken[key].every((v) => bindingValues.includes(v))) {
           allMatch = false;
           break;
@@ -136,7 +129,6 @@ function getFilteredBindings(
         newBindings.push(binding);
         continue;
       }
-
 
       for (const key of Object.keys(inhibitorToken)) {
         if (!has(processedInhibitorToken, key)) {
@@ -149,11 +141,14 @@ function getFilteredBindings(
         let hasEmpty = false;
         for (const isVariable of [true, false]) {
           if (inhibitoredBinding[key + `:${isVariable}`]) {
-            inhibitoredBinding[key + `:${isVariable}`] = inhibitoredBinding[key + `:${isVariable}`].filter(
-              (v) => !inhibitorToken[key].includes(v)
-            );
+            inhibitoredBinding[key + `:${isVariable}`] = inhibitoredBinding[
+              key + `:${isVariable}`
+            ].filter((v) => !inhibitorToken[key].includes(v));
           }
-          if (inhibitoredBinding[key + `:${isVariable}`] && inhibitoredBinding[key + `:${isVariable}`].length === 0) {
+          if (
+            inhibitoredBinding[key + `:${isVariable}`] &&
+            inhibitoredBinding[key + `:${isVariable}`].length === 0
+          ) {
             hasEmpty = true;
             break;
           }
@@ -172,11 +167,11 @@ function getFilteredBindings(
 
 /**
  * Filters bindings by removing those that contain inhibitor arc tokens.
- * 
+ *
  * @param bindings - The bindings to filter, organized by data class
  * @param arcPlaceInfoDict - Dictionary containing information about all arcs and places
  * @returns A new array of bindings with entries removed if they contain any inhibitor arc tokens
- * 
+ *
  * @description
  * This function performs the following steps:
  * 1. Identifies all inhibitor arcs from the arc place info dictionary
@@ -185,7 +180,7 @@ function getFilteredBindings(
  * 4. Returns the original bindings early if no relevant inhibitor arcs exist
  * 5. Extracts inhibitor tokens from the relevant inhibitor arcs
  * 6. Removes bindings that contain any of the inhibitor tokens
- * 
+ *
  * @remarks
  * Inhibitor arcs are special arcs in Petri nets that prevent a transition from firing if tokens
  * are present in the associated places. This function filters out bindings that would violate
@@ -199,10 +194,10 @@ export function filterBindingsByInhibitors(
 
   // Get all incoming data classes (excluding inhibitor arcs)
   const incomingDataClassKeys = getAllDataClassKeysFromArcs(
-    getNonInhibitorArcs(arcPlaceInfoDict)
+    getNonInhibitorArcs(arcPlaceInfoDict),
   );
 
-  // Filter inhibitor arcs to only those relevant 
+  // Filter inhibitor arcs to only those relevant
   // (having tokens and data classes in incoming arcs)
   const relevantInhibitorArcs = Object.fromEntries(
     Object.entries(inhibitorArcs).filter(([_, arcPlaceInfo]) =>

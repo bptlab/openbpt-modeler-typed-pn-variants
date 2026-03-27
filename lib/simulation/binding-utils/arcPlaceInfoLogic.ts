@@ -14,7 +14,9 @@ import {
  * @param incomingArcs - An array of `Arc` objects to process.
  * @returns A tuple `[ArcPlaceInfoDict, ArcPlaceInfoDict]` where the first dictionary contains merged arc info for all relevant arcs, and the second dictionary contains arc info for exact-syncing arcs only.
  */
-export function buildArcPlaceInfoDict(incomingArcs: Arc[]): [ArcPlaceInfoDict, ArcPlaceInfoDict] {
+export function buildArcPlaceInfoDict(
+  incomingArcs: Arc[],
+): [ArcPlaceInfoDict, ArcPlaceInfoDict] {
   const arcPlaceInfoDict: ArcPlaceInfoDict = {};
   const exactSynchingArcPlaceInfoDict: ArcPlaceInfoDict = {};
   const existingDataClassCombinations: { [key: string]: string } = {};
@@ -49,9 +51,7 @@ export function buildArcPlaceInfoDict(incomingArcs: Arc[]): [ArcPlaceInfoDict, A
         ),
       );
       arcPlaceInfoDict[existingArcId].dataClassInfoDict =
-        buildDataClassInfoDict(
-          arcPlaceInfoDict[existingArcId].tokens,
-        );
+        buildDataClassInfoDict(arcPlaceInfoDict[existingArcId].tokens);
     }
   }
   return [arcPlaceInfoDict, exactSynchingArcPlaceInfoDict];
@@ -71,9 +71,9 @@ export function buildArcPlaceInfoDict(incomingArcs: Arc[]): [ArcPlaceInfoDict, A
  *   used to preserve `isVariable` and `alias` properties for data classes already present.
  * @returns A dictionary mapping data class IDs to their aggregated `DataClassInfo` objects.
  */
-function buildDataClassInfoDict(
-  tokens: Token[],
-): { [dataClassKey: string]: string[] } {
+function buildDataClassInfoDict(tokens: Token[]): {
+  [dataClassKey: string]: string[];
+} {
   const dataClassInfoDict: { [dataClassKey: string]: string[] } = {};
 
   for (const token of tokens) {
@@ -129,11 +129,8 @@ function buildArcPlaceInfo(arc: Arc): ArcPlaceInfo {
     if (dataClass?.id && variableName) {
       const isVariable = variableClass === dataClass;
       dataClassInfoDict[
-        getDataClassKey(
-          dataClass.id,
-          variableName,
-          isVariable,
-        )] = [];
+        getDataClassKey(dataClass.id, variableName, isVariable)
+      ] = [];
     }
   }
 
@@ -143,15 +140,17 @@ function buildArcPlaceInfo(arc: Arc): ArcPlaceInfo {
     const tokenObj: Token = {};
     const tokenValues = token.values ?? [];
     for (const { dataClass, value } of tokenValues) {
-      Object.keys(dataClassInfoDict).filter((dataClassKey) =>
-        getDataClassFromKey(dataClassKey).id === dataClass.id
-      ).forEach((dataClassKey) => {
-        tokenObj[dataClassKey] = value;
-        if (!dataClassInfoDict[dataClassKey].includes(value)) {
-          dataClassInfoDict[dataClassKey].push(value);
-        }
-      }
-      );
+      Object.keys(dataClassInfoDict)
+        .filter(
+          (dataClassKey) =>
+            getDataClassFromKey(dataClassKey).id === dataClass.id,
+        )
+        .forEach((dataClassKey) => {
+          tokenObj[dataClassKey] = value;
+          if (!dataClassInfoDict[dataClassKey].includes(value)) {
+            dataClassInfoDict[dataClassKey].push(value);
+          }
+        });
     }
     customMarking.push(tokenObj);
   }
