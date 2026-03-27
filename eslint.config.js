@@ -9,7 +9,7 @@ export default [
 
   // basic project-level settings
   {
-    ignores: ["node_modules/**"],
+    ignores: ["node_modules/**", "dist/**"],
   },
 
   // language options and rules for JS (existing)
