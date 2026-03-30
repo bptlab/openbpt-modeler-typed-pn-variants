@@ -29,7 +29,7 @@
 .djs-container.simulation .tpn-toggle-mode,
 .tpn-toggle-mode:hover {
   background-color: var(--token-simulation-green-base-44, #10d070);
-  color: var(--token-simulation-white, #ffffff);
+  color: var(--token-simulation-white, #000000);
 }
 
 .djs-container.simulation .djs-bendpoint,
