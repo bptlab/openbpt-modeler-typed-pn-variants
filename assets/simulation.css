@@ -7,7 +7,7 @@
     var(--token-simulation-green-base-44, #10d070);
 }
 
-.ptn-toggle-mode {
+.tpn-toggle-mode {
   cursor: pointer;
   position: absolute;
   top: 20px;
@@ -21,13 +21,13 @@
   display: inline-flex;
 }
 
-.ptn-toggle-mode .ptn-toggle {
+.tpn-toggle-mode .tpn-toggle {
   margin-left: 0.25em;
   display: inline-flex;
 }
 
-.djs-container.simulation .ptn-toggle-mode,
-.ptn-toggle-mode:hover {
+.djs-container.simulation .tpn-toggle-mode,
+.tpn-toggle-mode:hover {
   background-color: var(--token-simulation-green-base-44, #10d070);
   color: var(--token-simulation-white, #ffffff);
 }
