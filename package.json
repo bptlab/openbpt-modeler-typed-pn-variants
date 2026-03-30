@@ -1,5 +1,5 @@
 {
-  "name": "openbpt-modeler-typed-pn-variants",
+  "name": "@bptlab/openbpt-modeler-typed-pn-variants",
   "version": "1.0.0",
   "description": "Modeler supporting OCPNs, t-PNIDs, OPIDs, and DOPIDs.",
   "repository": {
@@ -18,18 +18,28 @@
     "OPID",
     "DOPID"
   ],
-  "main": "dist/index.js",
+  "main": "index.js",
   "exports": {
-    "./dist/lib/CustomModeler": "./dist/lib/CustomModeler.js",
-    "./dist/lib/NavigatedViewer": "./dist/lib/NavigatedViewer.js",
-    "./assets/tpn-js.css": "./assets/tpn-js.css"
+    ".": "./index.js",
+    "./CustomModeler": "./dist/lib/CustomModeler.js",
+    "./NavigatedViewer": "./dist/lib/NavigatedViewer.js",
+    "./assets/tpn-js": {
+      "style": "./assets/tpn-js.css",
+      "default": "./assets/tpn-js.css"
+    },
+    "./assets/tpn-js.css": {
+      "style": "./assets/tpn-js.css",
+      "default": "./assets/tpn-js.css"
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "assets",
     "dist",
     "LICENSE",
     "package.json",
-    "README.md"
+    "README.md",
+    "index.js"
   ],
   "scripts": {
     "lint": "eslint . --ext .js,.ts",
