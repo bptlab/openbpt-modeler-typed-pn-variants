@@ -47,7 +47,8 @@
     "format": "prettier --write .",
     "watch": "tsc -w -p tsconfig.json",
     "build": "rimraf dist && tsc -p tsconfig.json",
-    "build:icons": "node scripts/build-icons.js"
+    "build:icons": "node scripts/build-icons.js",
+    "prepack": "npm run build"
   },
   "dependencies": {
     "@bpmn-io/properties-panel": "^3.26.4",
