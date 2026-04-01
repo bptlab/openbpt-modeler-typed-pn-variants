@@ -1,6 +1,6 @@
 {
   "name": "@bptlab/openbpt-modeler-typed-pn-variants",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Modeler supporting OCPNs, t-PNIDs, OPIDs, and DOPIDs.",
   "repository": {
     "type": "git",
