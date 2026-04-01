@@ -1,8 +1,7 @@
 import {
   createDataClassCombinationKeyFromDict,
   createDataClassCombinationKeyFromLink,
-  getDataClassKey,
-  getLinkPartFromDataClassKey,
+  getPartsFromDataClassKey,
   tokensOverlap,
 } from "./helpers";
 
@@ -51,10 +50,7 @@ export function getBiggestLinks(
           otherIdx !== idx &&
           link.every((l) =>
             other.some(
-              (ol) =>
-                ol.id === l.id &&
-                ol.alias === l.alias &&
-                ol.isVariable === l.isVariable,
+              (ol) => ol == l
             ),
           ) &&
           other.length > link.length,
@@ -68,8 +64,8 @@ export function getBiggestLinks(
  * Retrieves all links from the provided `ArcPlaceInfoDict`.
  *
  * Iterates over each entry in the dictionary, and for those marked as linking places,
- * constructs a `Link` array containing objects with `id`, `alias`, and `isVariable` properties
- * for each data class in the place. Returns an array of all such links.
+ * constructs a `Link` array containing the keys of the data classes in the place.
+ * Returns an array of all such links.
  *
  * @param arcPlaceInfoDict - A dictionary mapping place identifiers to their corresponding `ArcPlaceInfo` objects.
  * @returns An array of `Link` arrays, each representing the data class links for a linking place.
@@ -80,7 +76,7 @@ function getAllLinks(arcPlaceInfoDict: ArcPlaceInfoDict): Link[] {
     if (!arcPlaceInfo.isLinkingPlace) continue;
     const link: Link = [];
     for (const dataClassKey of Object.keys(arcPlaceInfo.dataClassInfoDict)) {
-      link.push(getLinkPartFromDataClassKey(dataClassKey));
+      link.push(dataClassKey);
     }
     allLinks.push(link);
   }
@@ -100,12 +96,8 @@ function deduplicateLinks(links: Link[]): Link[] {
   // Helper to compare two links for set equality (order-insensitive)
   function linksAreEqual(linkA: Link, linkB: Link): boolean {
     if (linkA.length !== linkB.length) return false;
-    const aSet = new Set(
-      linkA.map((l) => getDataClassKey(l.id, l.alias, l.isVariable)),
-    );
-    const bSet = new Set(
-      linkB.map((l) => getDataClassKey(l.id, l.alias, l.isVariable)),
-    );
+    const aSet = new Set(linkA);
+    const bSet = new Set(linkB);
     if (aSet.size !== bSet.size) return false;
     for (const item of aSet) {
       if (!bSet.has(item)) return false;
@@ -129,12 +121,8 @@ function deduplicateLinks(links: Link[]): Link[] {
  * @returns `true` if there is at least one link in `linkB` that shares the same data class key as a link in `linkA`; otherwise, `false`.
  */
 function linksOverlap(linkA: Link, linkB: Link): boolean {
-  const aSet = new Set(
-    linkA.map((l) => getDataClassKey(l.id, l.alias, l.isVariable)),
-  );
-  return linkB.some((l) =>
-    aSet.has(getDataClassKey(l.id, l.alias, l.isVariable)),
-  );
+  const aSet = new Set(linkA);
+  return linkB.some((l) => aSet.has(l));
 }
 
 /**
@@ -148,14 +136,14 @@ function linksOverlap(linkA: Link, linkB: Link): boolean {
  * @returns A new array containing the merged `Link` objects with duplicates removed.
  */
 function mergeLinks(linkA: Link, linkB: Link): Link {
-  const map = new Map<string, Link[0]>();
+  const aSet = new Set<string>();
   for (const l of linkA) {
-    map.set(getDataClassKey(l.id, l.alias, l.isVariable), l);
+    aSet.add(l);
   }
   for (const l of linkB) {
-    map.set(getDataClassKey(l.id, l.alias, l.isVariable), l);
+    aSet.add(l);
   }
-  return Array.from(map.values());
+  return Array.from(aSet);
 }
 
 /**
@@ -211,10 +199,7 @@ export function getBindingsForLink(
   const associatedLinks: Link[] = allLinks.filter((l) =>
     l.some((le) =>
       link.some(
-        (ce) =>
-          le.id === ce.id &&
-          le.alias === ce.alias &&
-          le.isVariable === ce.isVariable,
+        (ce) => le == ce
       ),
     ),
   );
@@ -317,12 +302,8 @@ function getLinkToken(
  */
 function getFirstOverlap(link: Link, links: Link[]): [number, string[]] {
   for (let i = 0; i < links.length; i++) {
-    const aKeys = new Set(
-      link.map((l) => getDataClassKey(l.id, l.alias, l.isVariable)),
-    );
-    const bKeys = new Set(
-      links[i].map((l) => getDataClassKey(l.id, l.alias, l.isVariable)),
-    );
+    const aKeys = new Set(link);
+    const bKeys = new Set(links[i]);
     const overlap = Array.from(aKeys).filter((key) => bKeys.has(key));
     if (overlap.length > 0) {
       return [i, overlap];
@@ -391,37 +372,22 @@ export function groupTokensByNonVariableDataclasses(
   for (const token of tokens) {
     let groupKey = "";
     for (const linkElement of link) {
-      if (!linkElement.isVariable) {
-        const dataClassKey = getDataClassKey(
-          linkElement.id,
-          linkElement.alias,
-          linkElement.isVariable,
-        );
-        groupKey += `${dataClassKey}:${token[dataClassKey]}::`;
+      if (!getPartsFromDataClassKey(linkElement).isVariable) {
+        groupKey += `${linkElement}:${token[linkElement]}::`;
       }
     }
     groupKey = groupKey.endsWith("::") ? groupKey.slice(0, -2) : groupKey;
     if (!groupedTokens[groupKey]) {
       groupedTokens[groupKey] = {};
       for (const linkElement of link) {
-        const dataClassKey = getDataClassKey(
-          linkElement.id,
-          linkElement.alias,
-          linkElement.isVariable,
-        );
-        groupedTokens[groupKey][dataClassKey] = linkElement.isVariable
+        groupedTokens[groupKey][linkElement] = getPartsFromDataClassKey(linkElement).isVariable
           ? []
-          : [token[dataClassKey]];
+          : [token[linkElement]];
       }
     }
     for (const linkElement of link) {
-      if (linkElement.isVariable) {
-        const dataClassKey = getDataClassKey(
-          linkElement.id,
-          linkElement.alias,
-          linkElement.isVariable,
-        );
-        groupedTokens[groupKey][dataClassKey].push(token[dataClassKey]);
+      if (getPartsFromDataClassKey(linkElement).isVariable) {
+        groupedTokens[groupKey][linkElement].push(token[linkElement]);
       }
     }
   }
@@ -477,12 +443,7 @@ export function getDataClassesNotInLinks(
   )) {
     let usedInLink = false;
     for (const link of biggestLinks) {
-      for (const linkElement of link) {
-        const linkDataClassKey = getDataClassKey(
-          linkElement.id,
-          linkElement.alias,
-          linkElement.isVariable,
-        );
+      for (const linkDataClassKey of link) {
         if (dataClassKey === linkDataClassKey) {
           usedInLink = true;
           break;
