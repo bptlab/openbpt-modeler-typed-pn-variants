@@ -177,6 +177,11 @@
   margin: 0;
 }
 
+/* fire icon in context pad */
+.pn-icon-fire-transition:before {
+  content: "▶️";
+}
+
 /* fast-fire icon in context pad */
 .pn-icon-fast-fire:before {
   content: "⚡";

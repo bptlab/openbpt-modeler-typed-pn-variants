@@ -111,21 +111,18 @@ export function createDataClassCombinationKeyFromDict(dataClassInfoDict: {
  */
 export function createDataClassCombinationKeyFromLink(link: Link): string {
   let key: string = "";
-  for (const linkElement of [...link].sort((a, b) =>
-    a.id.localeCompare(b.id),
-  )) {
-    key +=
-      getDataClassKey(
-        linkElement.id,
-        linkElement.alias,
-        linkElement.isVariable,
-      ) + "::";
+  for (const linkElement of [...link].sort((a, b) => {
+    const aParts = getPartsFromDataClassKey(a);
+    const bParts = getPartsFromDataClassKey(b);
+    return aParts.id.localeCompare(bParts.id);
+  })) {
+    key += linkElement + "::";
   }
   return key.endsWith("::") ? key.slice(0, -2) : key;
 }
 
 /**
- * Extracts a `DataClass` object from a string key.
+ * Extracts the parts of a `DataClass` object from a string key.
  *
  * The key is expected to be a colon-separated string in the format `"id:alias:isVariableStr"`.
  * Only the `id` and `alias` parts are used to construct the returned object.
@@ -138,7 +135,7 @@ export function getDataClassFromKey(dataClassKey: string): DataClass {
   return { id, alias };
 }
 
-export function getLinkPartFromDataClassKey(dataClassKey: string): {
+export function getPartsFromDataClassKey(dataClassKey: string): {
   id: string;
   alias: string;
   isVariable: boolean;
