@@ -50,7 +50,7 @@ export function getBiggestLinks(
           otherIdx !== idx &&
           link.every((l) =>
             other.some(
-              (ol) => ol == l
+              (ol) => ol === l
             ),
           ) &&
           other.length > link.length,
@@ -199,7 +199,7 @@ export function getBindingsForLink(
   const associatedLinks: Link[] = allLinks.filter((l) =>
     l.some((le) =>
       link.some(
-        (ce) => le == ce
+        (ce) => le === ce
       ),
     ),
   );

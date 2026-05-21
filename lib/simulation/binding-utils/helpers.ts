@@ -18,8 +18,8 @@ export function tokensEqual(tokenA: Token, tokenB: Token): boolean {
   return tokenAKeys.length !== tokenBKeys.length
     ? false
     : tokenAKeys.every(
-        (key) => tokenB.hasOwnProperty(key) && tokenA[key] === tokenB[key],
-      );
+      (key) => tokenB.hasOwnProperty(key) && tokenA[key] === tokenB[key],
+    );
 }
 
 /**
@@ -122,10 +122,10 @@ export function createDataClassCombinationKeyFromLink(link: Link): string {
 }
 
 /**
- * Extracts the parts of a `DataClass` object from a string key.
+ * Extracts 'id' and 'alias' of a `DataClass` object from a string key.
  *
  * The key is expected to be a colon-separated string in the format `"id:alias:isVariableStr"`.
- * Only the `id` and `alias` parts are used to construct the returned object.
+ * Only the `id` and `alias` parts are used to construct the returned DataClass object.
  *
  * @param dataClassKey - The colon-separated string representing the data class.
  * @returns An object containing the `id` and `alias` extracted from the key.
