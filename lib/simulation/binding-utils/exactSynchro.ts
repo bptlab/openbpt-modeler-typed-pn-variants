@@ -1,4 +1,3 @@
-import { getLinkPartFromDataClassKey } from "./helpers";
 import { groupTokensByNonVariableDataclasses } from "./linkingLogic";
 
 export function checkExactSynchroConstraints(
@@ -22,9 +21,7 @@ export function checkExactSynchroConstraints(
 
   for (const [arcId, arcPlaceInfo] of exactSynchroArcPlaceInfos) {
     const groupedTokens = groupTokensByNonVariableDataclasses(
-      Object.keys(arcPlaceInfo.dataClassInfoDict).map((dataClassKey) =>
-        getLinkPartFromDataClassKey(dataClassKey),
-      ),
+      Object.keys(arcPlaceInfo.dataClassInfoDict),
       arcPlaceInfo.tokens,
     );
     tokenDictPerArc.push({
@@ -118,7 +115,7 @@ export function checkExactSynchroConstraints(
           synchedBindings[dataClassKey + ":exact"] = maxEntry.values;
         }
       }
-      if (nonExactSyncEntries.length > 0) {
+      else if (nonExactSyncEntries.length > 0) {
         // Pick the one with the smallest values array
         const minEntry = nonExactSyncEntries.reduce((prev, curr) =>
           curr.values.length < prev.values.length ? curr : prev,

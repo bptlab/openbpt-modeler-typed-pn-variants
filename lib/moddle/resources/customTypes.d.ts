@@ -56,13 +56,9 @@ interface ArcPlaceInfoDict {
 type Token = { [DataClassKey: string]: string };
 
 /**
- * Represents an array of link objects, each containing an identifier, an alias, and a flag indicating if it is a variable.
- *
- * @property id - The unique identifier for the link.
- * @property alias - A human-readable alias for the link.
- * @property isVariable - Indicates whether the link refers to a variable.
+ * Represents a link as an array data class keys.
  */
-type Link = { id: string; alias: string; isVariable: boolean }[];
+type Link = string[];
 
 /**
  * Represents a mapping from a data class combination key to an array of `Token` objects.
