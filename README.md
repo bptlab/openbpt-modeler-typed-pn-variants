@@ -6,7 +6,7 @@ A modeler for various typed Petri net variants presented in literature. Currentl
 - [OCPN](https://journals.sagepub.com/doi/abs/10.3233/FI-2020-1946) (Object-centric Petri nets)
 - [OPID](https://link.springer.com/chapter/10.1007/978-3-031-61057-8_1) (Object-centric Petri nets with Identifiers) with the exact synchronization extension presented for [DOPID](https://link.springer.com/chapter/10.1007/978-3-031-94571-7_11) (Data-aware Object-centri Petri nets with Identifiers)
 
-The modeler is based on the [openbpt-modeler-petri-net](https://github.com/bptlab/openbpt-modeler-petri-net) modeler, which makes use of the wonderful [diagram-js](https://github.com/bpmn-io/diagram-js) library and took inspiration from [bpmn-js](https://github.com/bpmn-io/bpmn-js), [object-diagram-js](https://github.com/timKraeuter/object-diagram-js) and [fcm-js](https://github.com/bptlab/fCM-design-support).
+The modeler is based on the [openbpt-modeler-petri-net](https://github.com/bptlab/openbpt-modeler-petri-net) modeler, which makes use of the [diagram-js](https://github.com/bpmn-io/diagram-js) library and took inspiration from [bpmn-js](https://github.com/bpmn-io/bpmn-js), [object-diagram-js](https://github.com/timKraeuter/object-diagram-js) and [fcm-js](https://github.com/bptlab/fCM-design-support).
 
 ## Development Setup
 
@@ -23,3 +23,7 @@ The modeler is based on the [openbpt-modeler-petri-net](https://github.com/bptla
 To start the modeler, run
 1. ``npm run watch`` in this repository to automatically compile changes to js (relevant for changes to .ts files)
 2. ``npm run dev`` in the development repo's directory.
+
+## Metamodel
+
+<img width="1352" height="724" alt="Moddle_Klassendiagramm_OPIDs" src="https://github.com/user-attachments/assets/38b195b8-7776-4a2d-8be5-3d1f1b8b66cb" />
