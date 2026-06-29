@@ -19,8 +19,6 @@ export function checkExactSynchroConstraints(
     return validInputBindings;
   }
 
-  console.log(`Checking exact synchro constraints`, exactSynchroArcPlaceInfos);
-
   for (const [arcId, arcPlaceInfo] of exactSynchroArcPlaceInfos) {
     const groupedTokens = groupTokensByNonVariableDataclasses(
       Object.keys(arcPlaceInfo.dataClassInfoDict),
@@ -32,9 +30,6 @@ export function checkExactSynchroConstraints(
       dataClassInfoDict: arcPlaceInfo.dataClassInfoDict,
     });
   }
-
-  console.log(`Token dict per arc:`, tokenDictPerArc);
-  console.log(`Valid input bindings:`, validInputBindings);
 
   // For each input Binding ...
   for (const inputBinding of validInputBindings) {
