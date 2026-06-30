@@ -187,6 +187,8 @@
   padding: 10px;
   border: 1px solid rgba(0, 0, 0, 0.12);
   min-width: 260px;
+  width: max-content;
+  max-width: calc(100vw - 24px);
   box-sizing: border-box;
 }
 
@@ -194,6 +196,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: max-content;
 }
 
 .bts-fire-title {
@@ -201,9 +204,20 @@
 }
 
 .bts-fire-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: max-content max-content;
+  column-gap: 8px;
+  row-gap: 8px;
+  width: max-content;
+  align-items: center;
+}
+
+.bts-fire-fields:empty::before {
+  content: "";
+  display: block;
+  width: 220px;
+  height: 1px;
+  visibility: hidden;
 }
 
 .bts-fire-row {
@@ -215,16 +229,61 @@
 
 .bts-fire-row select {
   flex: 1 1 auto;
+  width: 100%;
+}
+
+.bts-fire-overlay select,
+.bts-fire-overlay button {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 2px;
+  background-color: #ffffff;
+  color: #212121;
+  font: inherit;
+  min-height: 30px;
+  box-sizing: border-box;
+}
+
+.bts-fire-overlay select {
+  padding: 4px 8px;
+}
+
+.bts-fire-overlay button {
+  padding: 4px 12px;
+  cursor: pointer;
+  background-color: #f5f5f5;
+}
+
+.bts-fire-overlay button:hover {
+  background-color: #e8e8e8;
+}
+
+.bts-fire-overlay .bts-fire-cancel,
+.bts-fire-overlay .bts-fire-fast {
+  background-color: #f5f5f5;
+  color: #212121;
+}
+
+.bts-fire-overlay .bts-fire-confirm {
+  background-color: #f5f5f5;
+  color: #212121;
+}
+
+.bts-fire-overlay .bts-fire-confirm:hover {
+  background-color: #e8e8e8;
+}
+
+.bts-fire-overlay .bts-fire-cancel:hover,
+.bts-fire-overlay .bts-fire-fast:hover {
+  background-color: #e8e8e8;
 }
 
 /* Ensure two-column layout: label (left) and control (right).
    Apply to common adapter output shapes by selecting immediate children
    and common form-js generated wrappers. */
 .bts-fire-fields > * {
-  display: flex !important;
-  flex-direction: row !important;
-  align-items: center !important;
-  gap: 8px !important;
+  display: contents !important;
 }
 
 .bts-fire-fields label,
@@ -241,11 +300,15 @@
 .bts-fire-fields .fjs-input,
 .bts-fire-fields .field-control {
   flex: 1 1 auto;
+  width: 100%;
 }
 
 .bts-fire-footer {
-  text-align: right;
   margin-top: 6px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
 }
 
 .bts-fire-cancel,
