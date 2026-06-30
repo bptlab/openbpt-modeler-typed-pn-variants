@@ -8,6 +8,8 @@ A modeler for various typed Petri net variants presented in literature. Currentl
 
 The modeler is based on the [openbpt-modeler-petri-net](https://github.com/bptlab/openbpt-modeler-petri-net) modeler, which makes use of the [diagram-js](https://github.com/bpmn-io/diagram-js) library and took inspiration from [bpmn-js](https://github.com/bpmn-io/bpmn-js), [object-diagram-js](https://github.com/timKraeuter/object-diagram-js) and [fcm-js](https://github.com/bptlab/fCM-design-support).
 
+You can test the modeler live either [standalone](https://bptlab.github.io/openbpt-modeler-dev/) or integrated into [OpenBPT](https://openbpt.org/) by creating a "Typed Petri Net" after logging in.
+
 ## Development Setup
 
 1. Clone this repository: ``git clone git@github.com:bptlab/openbpt-typed-pn-variants-modeler.git``
