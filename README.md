@@ -12,19 +12,20 @@ You can test the modeler live either [standalone](https://bptlab.github.io/openb
 
 ## Development Setup
 
-1. Clone this repository: ``git clone git@github.com:bptlab/openbpt-typed-pn-variants-modeler.git``
+1. Clone this repository: `git clone git@github.com:bptlab/openbpt-typed-pn-variants-modeler.git`
 2. Navigate into the created directory
-3. Run ``npm install``
-4. Run ``npm link``
-5. Clone the [development repository](https://github.com/bptlab/openbpt-modeler-dev/tree/openbpt-typed-pn-variants-modeler): ``git clone git@github.com:bptlab/openbpt-modeler-dev.git``
+3. Run `npm install`
+4. Run `npm link`
+5. Clone the [development repository](https://github.com/bptlab/openbpt-modeler-dev/tree/openbpt-typed-pn-variants-modeler): `git clone git@github.com:bptlab/openbpt-modeler-dev.git`
 6. Navigate into the created directory
 7. Checkout the `openbpt-typed-pn-variants-modeler` branch
-8. Run ``npm install``
-9. Run ``npm link openbpt-typed-pn-variants-modeler``
+8. Run `npm install`
+9. Run `npm link openbpt-typed-pn-variants-modeler`
 
 To start the modeler, run
-1. ``npm run watch`` in this repository to automatically compile changes to js (relevant for changes to .ts files)
-2. ``npm run dev`` in the development repo's directory.
+
+1. `npm run watch` in this repository to automatically compile changes to js (relevant for changes to .ts files)
+2. `npm run dev` in the development repo's directory.
 
 ## Metamodel
 

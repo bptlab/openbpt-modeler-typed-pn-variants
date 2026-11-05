@@ -48,11 +48,7 @@ export function getBiggestLinks(
       !arr.some(
         (other, otherIdx) =>
           otherIdx !== idx &&
-          link.every((l) =>
-            other.some(
-              (ol) => ol === l
-            ),
-          ) &&
+          link.every((l) => other.some((ol) => ol === l)) &&
           other.length > link.length,
       ),
   );
@@ -197,11 +193,7 @@ export function getBindingsForLink(
 ): BindingPerDataClass[] {
   // get all links associated with the current link
   const associatedLinks: Link[] = allLinks.filter((l) =>
-    l.some((le) =>
-      link.some(
-        (ce) => le === ce
-      ),
-    ),
+    l.some((le) => link.some((ce) => le === ce)),
   );
 
   // Step 1: get biggest link tokens (tokens that have values for all dataclasses in the link)
@@ -380,7 +372,9 @@ export function groupTokensByNonVariableDataclasses(
     if (!groupedTokens[groupKey]) {
       groupedTokens[groupKey] = {};
       for (const linkElement of link) {
-        groupedTokens[groupKey][linkElement] = getPartsFromDataClassKey(linkElement).isVariable
+        groupedTokens[groupKey][linkElement] = getPartsFromDataClassKey(
+          linkElement,
+        ).isVariable
           ? []
           : [token[linkElement]];
       }

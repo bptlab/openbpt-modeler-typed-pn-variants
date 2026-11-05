@@ -114,8 +114,7 @@ export function checkExactSynchroConstraints(
         if (maxEntry.values.length > 0) {
           synchedBindings[dataClassKey + ":exact"] = maxEntry.values;
         }
-      }
-      else if (nonExactSyncEntries.length > 0) {
+      } else if (nonExactSyncEntries.length > 0) {
         // Pick the one with the smallest values array
         const minEntry = nonExactSyncEntries.reduce((prev, curr) =>
           curr.values.length < prev.values.length ? curr : prev,

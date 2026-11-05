@@ -18,8 +18,8 @@ export function tokensEqual(tokenA: Token, tokenB: Token): boolean {
   return tokenAKeys.length !== tokenBKeys.length
     ? false
     : tokenAKeys.every(
-      (key) => tokenB.hasOwnProperty(key) && tokenA[key] === tokenB[key],
-    );
+        (key) => tokenB.hasOwnProperty(key) && tokenA[key] === tokenB[key],
+      );
 }
 
 /**

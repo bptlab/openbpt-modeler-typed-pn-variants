@@ -16,11 +16,6 @@
     "incremental": true,
     "resolveJsonModule": true
   },
-  "include": [
-    "lib/**/*", "scripts",
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["lib/**/*", "scripts"],
+  "exclude": ["node_modules", "dist"]
 }
