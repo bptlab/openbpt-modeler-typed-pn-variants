@@ -7,6 +7,7 @@ interface Node extends ModelElement {
 }
 
 interface Transition extends Node {
+  isSilent?: boolean;
   incoming: Arc[];
   outgoing: Arc[];
 }
