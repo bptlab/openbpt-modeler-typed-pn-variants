@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<log>
+  <object-types>
+    <object-type name="Order">
+      <attributes>
+        <attribute name="state transition" type="string"/>
+      </attributes>
+    </object-type>
+    <object-type name="Item">
+      <attributes>
+        <attribute name="state transition" type="string"/>
+      </attributes>
+    </object-type>
+  </object-types>
+  <event-types>
+    <event-type name="t1">
+      <attributes/>
+    </event-type>
+    <event-type name="t2">
+      <attributes/>
+    </event-type>
+  </event-types>
+  <objects>
+    <object id="Order_1" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:00:00Z">({}, {p1})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:01:00Z">({p1}, {p2})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:02:00Z">({p2}, {})</attribute>
+      </attributes>
+    </object>
+    <object id="Order_2" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:03:00Z">({}, {p1})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:05:00Z">({p1}, {p2})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:11:00Z">({p2}, {})</attribute>
+      </attributes>
+    </object>
+    <object id="Order_3" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:04:00Z">({}, {p1})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:06:00Z">({p1}, {p2})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:08:00Z">({p2}, {})</attribute>
+      </attributes>
+    </object>
+    <object id="Order_4" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:07:00Z">({}, {p1})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:23:00Z">({p1}, {p2})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:26:00Z">({p2}, {})</attribute>
+      </attributes>
+    </object>
+    <object id="Order_5" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:09:00Z">({}, {p1})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:16:00Z">({p1}, {p2})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:17:00Z">({p2}, {})</attribute>
+      </attributes>
+    </object>
+    <object id="Order_6" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:10:00Z">({}, {p1})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:19:00Z">({p1}, {p2})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:29:00Z">({p2}, {})</attribute>
+      </attributes>
+    </object>
+    <object id="Order_7" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:12:00Z">({}, {p1})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:27:00Z">({p1}, {p2})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:28:00Z">({p2}, {})</attribute>
+      </attributes>
+    </object>
+    <object id="Order_8" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:13:00Z">({}, {p1})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:18:00Z">({p1}, {p2})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:21:00Z">({p2}, {})</attribute>
+      </attributes>
+    </object>
+    <object id="Order_9" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:14:00Z">({}, {p1})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:20:00Z">({p1}, {p2})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:22:00Z">({p2}, {})</attribute>
+      </attributes>
+    </object>
+    <object id="Order_10" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:15:00Z">({}, {p1})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:24:00Z">({p1}, {p2})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:25:00Z">({p2}, {})</attribute>
+      </attributes>
+    </object>
+  </objects>
+  <events>
+    <event id="e1" type="t1" time="2025-01-01T00:00:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_1" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e2" type="t2" time="2025-01-01T00:01:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_1" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e3" type="t1" time="2025-01-01T00:03:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_2" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e4" type="t1" time="2025-01-01T00:04:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_3" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e5" type="t2" time="2025-01-01T00:05:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_2" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e6" type="t2" time="2025-01-01T00:06:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_3" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e7" type="t1" time="2025-01-01T00:07:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_4" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e8" type="t1" time="2025-01-01T00:09:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_5" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e9" type="t1" time="2025-01-01T00:10:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_6" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e10" type="t1" time="2025-01-01T00:12:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_7" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e11" type="t1" time="2025-01-01T00:13:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_8" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e12" type="t1" time="2025-01-01T00:14:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_9" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e13" type="t1" time="2025-01-01T00:15:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_10" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e14" type="t2" time="2025-01-01T00:16:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_5" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e15" type="t2" time="2025-01-01T00:18:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_8" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e16" type="t2" time="2025-01-01T00:19:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_6" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e17" type="t2" time="2025-01-01T00:20:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_9" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e18" type="t2" time="2025-01-01T00:23:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_4" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e19" type="t2" time="2025-01-01T00:24:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_10" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e20" type="t2" time="2025-01-01T00:27:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_7" qualifier=""/>
+      </objects>
+    </event>
+  </events>
+</log>

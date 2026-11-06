@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tpn:definitions xmlns:tpn="http://bpt-lab.org/schemas/tpn" xmlns:tpnDi="http://bpt-lab.org/schemas/tpnDi" xmlns:dc="https://www.omg.org/spec/BPMN/20100501/DC.xsd">
+  <tpn:model id="model_1" name="Model 1">
+    <tpn:transition id="Transition_7219vsfcurfjcku8qqht539qh" isSilent="true" type="tpn:Transition" />
+    <tpn:place id="Place_d9kdx3zxpgnnh5ntwyd8gjezp" color="DataClass_dcolwirv4jtuvngdfcs5q2cn0" type="tpn:Place" />
+    <tpn:arc id="Arc_bxpiyo5uhbu50yl4d5ftrabuy" source="Transition_7219vsfcurfjcku8qqht539qh" target="Place_d9kdx3zxpgnnh5ntwyd8gjezp" type="tpn:Arc">
+      <tpn:inscription id="Inscription_0mep3jzy7m9jaqqfikggx2c7j">
+        <tpn:inscriptionElement id="InscriptionElement_cctp8n8ci6d3xp6mf0x11i4e1" dataClass="DataClass_dcolwirv4jtuvngdfcs5q2cn0" variableName="O" isGenerated="true" />
+      </tpn:inscription>
+    </tpn:arc>
+    <tpn:transition id="Transition_9ue8gl2ppht7e2csz16lx065f" type="tpn:Transition" />
+    <tpn:arc id="Arc_364mnqb1agxxx69bv05nm6z2c" source="Place_d9kdx3zxpgnnh5ntwyd8gjezp" target="Transition_9ue8gl2ppht7e2csz16lx065f" variableType="DataClass_dcolwirv4jtuvngdfcs5q2cn0" type="tpn:Arc">
+      <tpn:inscription id="Inscription_4696ho3b5p1wpf6altmw4s326">
+        <tpn:inscriptionElement id="InscriptionElement_6l1iko410osm9m7pj42shavna" dataClass="DataClass_dcolwirv4jtuvngdfcs5q2cn0" variableName="O" isGenerated="false" />
+      </tpn:inscription>
+    </tpn:arc>
+    <tpn:place id="Place_dyn6pab9lidp2fnqsu3m88s0o" color="DataClass_dcolwirv4jtuvngdfcs5q2cn0" type="tpn:Place" />
+    <tpn:arc id="Arc_3efzitfldl8dmc2bpv74tga80" source="Transition_9ue8gl2ppht7e2csz16lx065f" target="Place_dyn6pab9lidp2fnqsu3m88s0o" variableType="DataClass_dcolwirv4jtuvngdfcs5q2cn0" type="tpn:Arc">
+      <tpn:inscription id="Inscription_0lzhp044iruq4tdkdbdeuc8ei">
+        <tpn:inscriptionElement id="InscriptionElement_d5wm8fynpw9gk8e4qalmeb9fd" dataClass="DataClass_dcolwirv4jtuvngdfcs5q2cn0" variableName="O" isGenerated="false" />
+      </tpn:inscription>
+    </tpn:arc>
+    <tpn:transition id="Transition_6z3mhsjm05ig618ul4iliug46" isSilent="true" type="tpn:Transition" />
+    <tpn:arc id="Arc_dzs7hxe1pr5wnd8ybanhukgo6" source="Place_dyn6pab9lidp2fnqsu3m88s0o" target="Transition_6z3mhsjm05ig618ul4iliug46" variableType="DataClass_dcolwirv4jtuvngdfcs5q2cn0" isExactSynchronization="true" type="tpn:Arc">
+      <tpn:inscription id="Inscription_a6d6pcahirej5zwxy51urxjb7">
+        <tpn:inscriptionElement id="InscriptionElement_1kdd4aqtiirtapebe0l10r0pv" dataClass="DataClass_dcolwirv4jtuvngdfcs5q2cn0" variableName="O" isGenerated="false" />
+      </tpn:inscription>
+    </tpn:arc>
+    <tpn:dataClass id="DataClass_dcolwirv4jtuvngdfcs5q2cn0" name="Order" alias="O" valueType="ID" />
+    <tpn:dataClass id="DataClass_5k9j35nnl5n238vivtaseoeoc" name="Item" alias="I" valueType="ID" />
+  </tpn:model>
+  <tpnDi:diagram id="model_1_di">
+    <tpnDi:plane id="model_1_plane" modelElement="model_1">
+      <tpnDi:diagramShape id="Transition_7219vsfcurfjcku8qqht539qh_di" modelElement="Transition_7219vsfcurfjcku8qqht539qh">
+        <dc:Bounds x="560" y="355" width="20" height="50" />
+      </tpnDi:diagramShape>
+      <tpnDi:diagramShape id="Place_d9kdx3zxpgnnh5ntwyd8gjezp_di" modelElement="Place_d9kdx3zxpgnnh5ntwyd8gjezp">
+        <dc:Bounds x="645" y="355" width="50" height="50" />
+      </tpnDi:diagramShape>
+      <tpnDi:diagramEdge id="Arc_bxpiyo5uhbu50yl4d5ftrabuy_di" modelElement="Arc_bxpiyo5uhbu50yl4d5ftrabuy">
+        <tpnDi:waypoint x="580" y="380" />
+        <tpnDi:waypoint x="645" y="380" />
+        <tpnDi:diagramLabel>
+          <dc:Bounds x="594" y="348" width="36" height="23" />
+        </tpnDi:diagramLabel>
+      </tpnDi:diagramEdge>
+      <tpnDi:diagramShape id="Transition_9ue8gl2ppht7e2csz16lx065f_di" modelElement="Transition_9ue8gl2ppht7e2csz16lx065f">
+        <dc:Bounds x="760" y="355" width="50" height="50" />
+      </tpnDi:diagramShape>
+      <tpnDi:diagramEdge id="Arc_364mnqb1agxxx69bv05nm6z2c_di" modelElement="Arc_364mnqb1agxxx69bv05nm6z2c">
+        <tpnDi:waypoint x="695" y="380" />
+        <tpnDi:waypoint x="760" y="380" />
+        <tpnDi:diagramLabel>
+          <dc:Bounds x="708" y="353" width="39" height="23" />
+        </tpnDi:diagramLabel>
+      </tpnDi:diagramEdge>
+      <tpnDi:diagramShape id="Place_dyn6pab9lidp2fnqsu3m88s0o_di" modelElement="Place_dyn6pab9lidp2fnqsu3m88s0o">
+        <dc:Bounds x="875" y="355" width="50" height="50" />
+      </tpnDi:diagramShape>
+      <tpnDi:diagramEdge id="Arc_3efzitfldl8dmc2bpv74tga80_di" modelElement="Arc_3efzitfldl8dmc2bpv74tga80">
+        <tpnDi:waypoint x="810" y="380" />
+        <tpnDi:waypoint x="875" y="380" />
+        <tpnDi:diagramLabel>
+          <dc:Bounds x="829" y="348" width="26" height="23" />
+        </tpnDi:diagramLabel>
+      </tpnDi:diagramEdge>
+      <tpnDi:diagramShape id="Transition_6z3mhsjm05ig618ul4iliug46_di" modelElement="Transition_6z3mhsjm05ig618ul4iliug46">
+        <dc:Bounds x="990" y="355" width="20" height="50" />
+      </tpnDi:diagramShape>
+      <tpnDi:diagramEdge id="Arc_dzs7hxe1pr5wnd8ybanhukgo6_di" modelElement="Arc_dzs7hxe1pr5wnd8ybanhukgo6">
+        <tpnDi:waypoint x="925" y="380" />
+        <tpnDi:waypoint x="990" y="380" />
+        <tpnDi:diagramLabel>
+          <dc:Bounds x="931" y="353" width="37" height="23" />
+        </tpnDi:diagramLabel>
+      </tpnDi:diagramEdge>
+    </tpnDi:plane>
+  </tpnDi:diagram>
+</tpn:definitions>
