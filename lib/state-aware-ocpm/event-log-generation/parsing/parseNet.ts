@@ -1,5 +1,5 @@
-import createModdle from "../../moddle";
-import modelSchema from "../../moddle/resources/modelSchema";
+import createModdle from "../../vendor/moddle";
+import modelSchema from "../../vendor/moddle/resources/modelSchema";
 import { EventLogInputError } from "../errors";
 import type { Marking, ObjectToken } from "../types/marking";
 import type {

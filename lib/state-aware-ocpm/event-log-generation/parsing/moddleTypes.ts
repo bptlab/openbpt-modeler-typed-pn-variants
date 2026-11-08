@@ -1,6 +1,6 @@
 /**
  * Minimal typings for the moddle elements read by the parser. They only list the
- * properties used here (see `moddle/resources/modelSchema.js` for the full schema).
+ * properties used here (see `vendor/moddle/resources/modelSchema.js` for the full schema).
  */
 
 export interface ModdleElement {

@@ -1,0 +1,58 @@
+{
+  "name": "@bptlab/state-aware-ocpm",
+  "version": "0.1.0",
+  "private": true,
+  "description": "State-aware object-centric process mining for typed Petri nets: OCEL 2.0 event log generation.",
+  "author": "Maximilian König",
+  "license": "MIT",
+  "keywords": [
+    "process mining",
+    "object-centric",
+    "OCEL",
+    "Petri net",
+    "OCPN",
+    "t-PNID",
+    "OPID",
+    "DOPID"
+  ],
+  "main": "dist/event-log-generation/index.js",
+  "types": "dist/event-log-generation/index.d.ts",
+  "exports": {
+    "./event-log-generation": {
+      "types": "./dist/event-log-generation/index.d.ts",
+      "default": "./dist/event-log-generation/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "rimraf dist && tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "generate-log": "ts-node event-log-generation/cli.ts",
+    "lint": "eslint . --ext .js,.ts",
+    "lint:fix": "eslint . --ext .js,.ts --fix",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "ids": "^1.0.5",
+    "min-dash": "^4.2.1",
+    "moddle": "^6.2.3",
+    "moddle-xml": "^10.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.48.1",
+    "@typescript-eslint/parser": "^8.48.1",
+    "eslint": "^10.1.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.6.2",
+    "rimraf": "^6.1.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

@@ -2,7 +2,7 @@
  * Event log generation for typed Petri nets: simulates a net, records the sequence of
  * transition firings with their bindings, and turns it into an OCEL 2.0 log.
  *
- * Depends only on `../moddle` for reading the XML.
+ * Depends only on the modeler's moddle schema (`../vendor/moddle`) for reading the XML.
  */
 import { createOcelLogBuilder, type OcelOptions } from "./ocel/buildOcelLog";
 import { serializeOcelXml } from "./ocel/serializeXml";

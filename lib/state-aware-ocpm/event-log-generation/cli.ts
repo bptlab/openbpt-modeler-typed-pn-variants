@@ -1,7 +1,9 @@
 /**
- * Command-line runner (Node), from the repository root:
+ * Command-line runner (Node):
  *
- *   npx ts-node lib/event-log-generation/cli.ts <net.xml> <MAX_OBJECTS> [seed] [options]
+ *   npm run generate-log -- <net.xml> <MAX_OBJECTS> [seed] [options]
+ *
+ * npm runs it from the repository root, so relative paths are resolved from there.
  *
  * Options:
  *   --max-per-type=Order:3,Item:10  maximum number of created objects per object type
@@ -23,7 +25,7 @@ import type { OcelModeName } from "./ocel/modes";
 import type { ObjectTypeLimits } from "./types/limits";
 
 const USAGE = [
-  "Usage: npx ts-node lib/event-log-generation/cli.ts <net.xml> <MAX_OBJECTS> [seed] [options]",
+  "Usage: npm run generate-log -- <net.xml> <MAX_OBJECTS> [seed] [options]",
   "Options: --max-per-type=Order:3,Item:10  --out=<file>  --no-log  --mode=default|state-aware",
   "         --log-silent  --start-time=<ISO 8601>  --time-step=<seconds>  --tokens",
 ].join("\n");

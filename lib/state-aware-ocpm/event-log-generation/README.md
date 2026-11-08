@@ -5,7 +5,7 @@ Simulates a typed Petri net (XML as written by `saveXML`) from its initial marki
 ## Usage
 
 ```ts
-import { generateEventLog } from "./event-log-generation";
+import { generateEventLog } from "@bptlab/state-aware-ocpm/event-log-generation";
 
 const { simulation, log, ocelXml } = await generateEventLog(xml, 5, {
   // all optional:
@@ -19,10 +19,10 @@ const { simulation, log, ocelXml } = await generateEventLog(xml, 5, {
 }); // prints the firings by default
 ```
 
-The library does not touch the file system; `ocelXml` is the file content. From the repository root (Node, via the `ts-node` dev dependency), the CLI writes the file:
+The library does not touch the file system; `ocelXml` is the file content. The CLI (Node, via the `ts-node` dev dependency) writes the file. npm runs it from the repository root, so relative paths, including the default output file, are relative to the root:
 
 ```
-npx ts-node lib/event-log-generation/cli.ts <net.xml> <MAX_OBJECTS> [seed] [options]
+npm run generate-log -- <net.xml> <MAX_OBJECTS> [seed] [options]
 
   --max-per-type="Order:3,Item:2"  maximum number of created objects per object type
   --out=<file>                   where to write the log (default: <net name>.ocel.xml in the current directory)
@@ -33,6 +33,8 @@ npx ts-node lib/event-log-generation/cli.ts <net.xml> <MAX_OBJECTS> [seed] [opti
   --time-step=<seconds>          time between firings (default 60)
   --tokens                       also print the consumed (-) and produced (+) tokens of each firing
 ```
+
+For example: `npm run generate-log -- event-log-generation/example_nets/Simple_link.xml 5 42 --mode=state-aware`.
 
 Each run prints its seed; passing it again reproduces the run.
 
@@ -89,14 +91,14 @@ Note: as no event refers to them, pm4py's importer also drops objects that only 
 
 ## Structure
 
-| Folder        | Contents                                                                                                                                                                                     |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `types/`      | Net, marking, binding and log types                                                                                                                                                          |
-| `parsing/`    | XML → net and initial marking (the only code that uses the moddle)                                                                                                                           |
-| `semantics/`  | Enablement, bindings and firing. Ports of the modeler's `simulation/binding-utils/` and of `executeBinding` in `simulation/context-pads/FireTransitionHandler.js` / `FireTransitionUtils.js` |
-| `simulation/` | Main loop, random choices, object ids, object limits, enabled-transition tracking                                                                                                            |
-| `ocel/`       | OCEL 2.0 log model, log modes (`modes/`), clock and XML writer                                                                                                                               |
-| `output/`     | Text output                                                                                                                                                                                  |
+| Folder        | Contents                                                                                                                                                                                             |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `types/`      | Net, marking, binding and log types                                                                                                                                                                  |
+| `parsing/`    | XML → net and initial marking (the only code that uses the moddle, from `../vendor/moddle`)                                                                                                          |
+| `semantics/`  | Enablement, bindings and firing. Ports of the modeler's `lib/simulation/binding-utils/` and of `executeBinding` in `lib/simulation/context-pads/FireTransitionHandler.js` / `FireTransitionUtils.js` |
+| `simulation/` | Main loop, random choices, object ids, object limits, enabled-transition tracking                                                                                                                    |
+| `ocel/`       | OCEL 2.0 log model, log modes (`modes/`), clock and XML writer                                                                                                                                       |
+| `output/`     | Text output                                                                                                                                                                                          |
 
 The port was compared against the modeler's original functions on the example nets (simulated runs and random markings): bindings, consumed tokens and produced tokens were identical.
 
@@ -106,7 +108,3 @@ The port was compared against the modeler's original functions on the example ne
 - **Subsets for variable arcs are uniform.** The modeler adds each value with probability 1/2 and falls back to the last value if none was picked; this redraws instead.
 - The structural check runs once per transition instead of on every enablement check.
 - Inscription elements are matched to the place's data classes by data class, not by position (equivalent, since the modeler keeps both lists sorted by name).
-
-## Moving to its own repository
-
-The folder only imports `../moddle` (which itself imports `lib/util/constants.js`). Take along `lib/moddle/`, `lib/util/constants.js` and the packages `moddle`, `moddle-xml`, `ids` and `min-dash`. The local `tsconfig.json` extends the root one and only exists so that `ts-node` runs `cli.ts` as CommonJS.
