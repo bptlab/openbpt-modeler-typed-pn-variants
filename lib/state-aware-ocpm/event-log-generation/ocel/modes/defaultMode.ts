@@ -1,7 +1,12 @@
 import type { TransitionFiring } from "../../types/log";
 import type { ObjectToken } from "../../types/marking";
 import type { OcelLogBuilder, OcelModeContext } from "../mode";
-import type { OcelEvent, OcelLog, OcelObject, OcelType } from "../types";
+import type {
+  OcelEvent,
+  OcelLog,
+  OcelObject,
+  OcelType,
+} from "../../../ocel/types";
 import {
   getEventTypeNames,
   getObjectTypeNames,

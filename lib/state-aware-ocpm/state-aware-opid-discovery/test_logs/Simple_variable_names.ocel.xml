@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<log>
+  <object-types>
+    <object-type name="Order">
+      <attributes>
+        <attribute name="state transition" type="string"/>
+      </attributes>
+    </object-type>
+    <object-type name="Item">
+      <attributes>
+        <attribute name="state transition" type="string"/>
+      </attributes>
+    </object-type>
+  </object-types>
+  <event-types>
+    <event-type name="t1">
+      <attributes/>
+    </event-type>
+  </event-types>
+  <objects>
+    <object id="Order_2" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:00:00Z">({p1}, {p4})</attribute>
+      </attributes>
+    </object>
+    <object id="Order_1" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:00:00Z">({p2, p3}, {p5})</attribute>
+      </attributes>
+    </object>
+    <object id="Order_3" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:00:00Z">({}, {p6})</attribute>
+      </attributes>
+    </object>
+  </objects>
+  <events>
+    <event id="e1" type="t1" time="2025-01-01T00:00:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_2" qualifier=""/>
+        <relationship object-id="Order_1" qualifier=""/>
+        <relationship object-id="Order_3" qualifier=""/>
+      </objects>
+    </event>
+  </events>
+</log>

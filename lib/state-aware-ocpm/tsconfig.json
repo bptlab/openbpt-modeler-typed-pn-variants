@@ -15,7 +15,12 @@
     "declaration": true,
     "sourceMap": true
   },
-  "include": ["vendor", "event-log-generation", "state-aware-opid-discovery"],
+  "include": [
+    "vendor",
+    "ocel",
+    "event-log-generation",
+    "state-aware-opid-discovery"
+  ],
   "exclude": ["node_modules", "dist"],
   // The build emits ES modules (for bundlers); ts-node runs the CLI as CommonJS.
   "ts-node": {

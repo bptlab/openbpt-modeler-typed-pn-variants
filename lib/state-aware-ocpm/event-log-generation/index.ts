@@ -5,8 +5,8 @@
  * Depends only on the modeler's moddle schema (`../vendor/moddle`) for reading the XML.
  */
 import { createOcelLogBuilder, type OcelOptions } from "./ocel/buildOcelLog";
-import { serializeOcelXml } from "./ocel/serializeXml";
-import type { OcelLog } from "./ocel/types";
+import { serializeOcelXml } from "../ocel/serializeXml";
+import type { OcelLog } from "../ocel/types";
 import {
   formatSimulationResult,
   type FormatOptions,
@@ -97,7 +97,7 @@ export type {
   OcelObjectAttribute,
   OcelRelationship,
   OcelType,
-} from "./ocel/types";
+} from "../ocel/types";
 export type { ParsedNet } from "./parsing/parseNet";
 export type { SimulationOptions } from "./simulation/simulate";
 export type { FormatOptions } from "./output/formatSimulationResult";

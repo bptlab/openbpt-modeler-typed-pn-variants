@@ -19,10 +19,10 @@ const { simulation, log, ocelXml } = await generateEventLog(xml, 5, {
 }); // prints the firings by default
 ```
 
-The library does not touch the file system; `ocelXml` is the file content. The CLI (Node, via the `ts-node` dev dependency) writes the file. npm runs it from the repository root, so relative paths, including the default output file, are relative to the root:
+The library does not touch the file system; `ocelXml` is the file content. The CLI (Node, via the `ts-node` dev dependency) writes the file. Run it from the repository root:
 
 ```
-npm run generate-log -- <net.xml> <MAX_OBJECTS> [seed] [options]
+npx ts-node event-log-generation/cli.ts <net.xml> <MAX_OBJECTS> [seed] [options]
 
   --max-per-type="Order:3,Item:2"  maximum number of created objects per object type
   --out=<file>                   where to write the log (default: <net name>.ocel.xml in the current directory)
@@ -34,7 +34,9 @@ npm run generate-log -- <net.xml> <MAX_OBJECTS> [seed] [options]
   --tokens                       also print the consumed (-) and produced (+) tokens of each firing
 ```
 
-For example: `npm run generate-log -- event-log-generation/example_nets/Simple_link.xml 5 42 --mode=state-aware`.
+For example: `npx ts-node event-log-generation/cli.ts event-log-generation/example_nets/Simple_link.xml 5 42 --mode=state-aware`.
+
+`npm run generate-log -- <net.xml> …` works too (npm runs it from the repository root, so paths are relative to the root). In PowerShell, quote the separator (`npm run generate-log '--' …`): PowerShell drops a bare `--`, and npm then takes the options for itself.
 
 Each run prints its seed; passing it again reproduces the run.
 
@@ -83,7 +85,7 @@ The **state-aware mode** (`mode: "state-aware"`) also logs links as objects and 
 - **Events:** one per non-silent firing (`e1`, `e2`, …), related to every object that gets a state transition in it: the objects it moves between places with one data class and the link objects it consumes or produces. An object of the binding that the firing only touches through link tokens is not related to the event; it is reached through its link objects.
 - **Objects:** objects of logged bindings, with ids as in the default mode, and link objects.
 - **Link objects** (`l1`, `l2`, …, skipping ids in use): a link is a token on a link place, identified by its link type and the objects it links. It exists while at least one of its tokens is on a link place; moving it between link places keeps the link object, but producing the same objects again after its last token was consumed creates a new one. A new link object gets a `linkedTypes` value (e.g. `<attribute name="linkedTypes" time="…">Order, Item</attribute>`) and is related to each object it links, and each of them to it; linked objects are not related to each other directly. The links of the initial marking (and their objects) are logged up front, at the time of the first firing. A link created by an unlogged silent firing gets its link object when a logged firing first touches it.
-- **State transitions:** in each logged firing, an object gets a `state transition` value at the firing's time: `({p1, p2}, {p3})`, the places it was consumed from and the places it was produced into, `{}` for none. No value is logged if both sets are empty. Objects only count places with one data class, link objects only link places. Places are named by their name, or by their id if they have none or share it with another place.
+- **State transitions:** in each logged firing, an object gets a `state transition` value at the firing's time: `({p1, p2}, {p3})`, the places it was consumed from and the places it was produced into, `{}` for none. No value is logged if both sets are empty. Objects only count places with one data class, link objects only link places. Places are named by their name, or by their id if they have none or share it with another place of the same color (the same set of data classes). Places of different colors may share a name, e.g. `p1` for an Order place and an Item place.
 - **Silent firings:** with `logSilentTransitions: true` (CLI `--log-silent`), they are logged like other firings (objects, link objects, relationships, state transitions) but get no event. By default nothing is logged for them. The default mode ignores this option.
 - Qualifiers are empty (`qualifier=""`) and events have no attributes.
 
@@ -97,7 +99,7 @@ Note: as no event refers to them, pm4py's importer also drops objects that only 
 | `parsing/`    | XML → net and initial marking (the only code that uses the moddle, from `../vendor/moddle`)                                                                                                          |
 | `semantics/`  | Enablement, bindings and firing. Ports of the modeler's `lib/simulation/binding-utils/` and of `executeBinding` in `lib/simulation/context-pads/FireTransitionHandler.js` / `FireTransitionUtils.js` |
 | `simulation/` | Main loop, random choices, object ids, object limits, enabled-transition tracking                                                                                                                    |
-| `ocel/`       | OCEL 2.0 log model, log modes (`modes/`), clock and XML writer                                                                                                                                       |
+| `ocel/`       | Log builder, log modes (`modes/`) and clock. The OCEL 2.0 log model, the XML writer and the state-aware value format are shared with the OPID discovery in `../ocel/`                                |
 | `output/`     | Text output                                                                                                                                                                                          |
 
 The port was compared against the modeler's original functions on the example nets (simulated runs and random markings): bindings, consumed tokens and produced tokens were identical.

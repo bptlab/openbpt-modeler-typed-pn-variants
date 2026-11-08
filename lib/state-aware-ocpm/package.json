@@ -2,7 +2,7 @@
   "name": "@bptlab/state-aware-ocpm",
   "version": "0.1.0",
   "private": true,
-  "description": "State-aware object-centric process mining for typed Petri nets: OCEL 2.0 event log generation.",
+  "description": "State-aware object-centric process mining for typed Petri nets: OCEL 2.0 event log generation and OPID discovery.",
   "author": "Maximilian König",
   "license": "MIT",
   "keywords": [
@@ -22,6 +22,10 @@
       "types": "./dist/event-log-generation/index.d.ts",
       "default": "./dist/event-log-generation/index.js"
     },
+    "./state-aware-opid-discovery": {
+      "types": "./dist/state-aware-opid-discovery/index.d.ts",
+      "default": "./dist/state-aware-opid-discovery/index.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -33,11 +37,13 @@
     "build": "rimraf dist && tsc -p tsconfig.json",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "generate-log": "ts-node event-log-generation/cli.ts",
+    "discover-opid": "ts-node state-aware-opid-discovery/cli.ts",
     "lint": "eslint . --ext .js,.ts",
     "lint:fix": "eslint . --ext .js,.ts --fix",
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@xmldom/xmldom": "^0.9.10",
     "ids": "^1.0.5",
     "min-dash": "^4.2.1",
     "moddle": "^6.2.3",

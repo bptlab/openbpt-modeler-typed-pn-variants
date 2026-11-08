@@ -2,7 +2,7 @@ import type { TransitionFiring } from "../types/log";
 import type { Marking } from "../types/marking";
 import type { PetriNet } from "../types/net";
 import type { FiringClock } from "./clock";
-import type { OcelLog } from "./types";
+import type { OcelLog } from "../../ocel/types";
 
 /** What a log mode gets to work with. */
 export interface OcelModeContext {

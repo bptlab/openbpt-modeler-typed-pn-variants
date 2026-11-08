@@ -3,7 +3,7 @@ import type { SimulationResult } from "../types/log";
 import { createFiringClock, type ClockOptions } from "./clock";
 import type { OcelLogBuilder } from "./mode";
 import { getOcelMode, type OcelModeName } from "./modes";
-import type { OcelLog } from "./types";
+import type { OcelLog } from "../../ocel/types";
 
 export interface OcelOptions extends ClockOptions {
   /** What is logged and how: "default" (the default) or "state-aware". */

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<log>
+  <object-types>
+    <object-type name="Order">
+      <attributes>
+        <attribute name="state transition" type="string"/>
+      </attributes>
+    </object-type>
+    <object-type name="Item">
+      <attributes>
+        <attribute name="state transition" type="string"/>
+      </attributes>
+    </object-type>
+    <object-type name="LinkOrderxItem">
+      <attributes>
+        <attribute name="state transition" type="string"/>
+        <attribute name="linkedTypes" type="string"/>
+      </attributes>
+    </object-type>
+  </object-types>
+  <event-types>
+    <event-type name="t1">
+      <attributes/>
+    </event-type>
+    <event-type name="t2">
+      <attributes/>
+    </event-type>
+    <event-type name="t5">
+      <attributes/>
+    </event-type>
+    <event-type name="t3">
+      <attributes/>
+    </event-type>
+    <event-type name="t4">
+      <attributes/>
+    </event-type>
+  </event-types>
+  <objects>
+    <object id="Order_1" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:02:00Z">({}, {p1})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:06:00Z">({p1}, {p2})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:09:00Z">({p2}, {p8, p7})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:10:00Z">({p8, p7}, {})</attribute>
+      </attributes>
+      <objects>
+        <relationship object-id="l2" qualifier=""/>
+      </objects>
+    </object>
+    <object id="Order_2" type="Order">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:03:00Z">({}, {p1})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:05:00Z">({p1}, {p2})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:07:00Z">({p2}, {p8, p7})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:08:00Z">({p8, p7}, {})</attribute>
+      </attributes>
+      <objects>
+        <relationship object-id="l1" qualifier=""/>
+      </objects>
+    </object>
+    <object id="Item_1" type="Item">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:00:00Z">({}, {p3})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:05:00Z">({p3}, {p4})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:07:00Z">({p4}, {p9})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:08:00Z">({p9}, {})</attribute>
+      </attributes>
+      <objects>
+        <relationship object-id="l1" qualifier=""/>
+      </objects>
+    </object>
+    <object id="Item_2" type="Item">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:01:00Z">({}, {p3})</attribute>
+      </attributes>
+    </object>
+    <object id="Item_3" type="Item">
+      <attributes>
+        <attribute name="state transition" time="2025-01-01T00:04:00Z">({}, {p3})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:06:00Z">({p3}, {p4})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:09:00Z">({p4}, {p9})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:10:00Z">({p9}, {})</attribute>
+      </attributes>
+      <objects>
+        <relationship object-id="l2" qualifier=""/>
+      </objects>
+    </object>
+    <object id="l1" type="LinkOrderxItem">
+      <attributes>
+        <attribute name="linkedTypes" time="2025-01-01T00:05:00Z">Order, Item</attribute>
+        <attribute name="state transition" time="2025-01-01T00:05:00Z">({}, {p5})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:07:00Z">({p5}, {p6})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:08:00Z">({p6}, {})</attribute>
+      </attributes>
+      <objects>
+        <relationship object-id="Order_2" qualifier=""/>
+        <relationship object-id="Item_1" qualifier=""/>
+      </objects>
+    </object>
+    <object id="l2" type="LinkOrderxItem">
+      <attributes>
+        <attribute name="linkedTypes" time="2025-01-01T00:06:00Z">Order, Item</attribute>
+        <attribute name="state transition" time="2025-01-01T00:06:00Z">({}, {p5})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:09:00Z">({p5}, {p6})</attribute>
+        <attribute name="state transition" time="2025-01-01T00:10:00Z">({p6}, {})</attribute>
+      </attributes>
+      <objects>
+        <relationship object-id="Order_1" qualifier=""/>
+        <relationship object-id="Item_3" qualifier=""/>
+      </objects>
+    </object>
+  </objects>
+  <events>
+    <event id="e1" type="t5" time="2025-01-01T00:00:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Item_1" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e2" type="t5" time="2025-01-01T00:01:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Item_2" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e3" type="t1" time="2025-01-01T00:02:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_1" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e4" type="t1" time="2025-01-01T00:03:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_2" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e5" type="t5" time="2025-01-01T00:04:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Item_3" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e6" type="t2" time="2025-01-01T00:05:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_2" qualifier=""/>
+        <relationship object-id="Item_1" qualifier=""/>
+        <relationship object-id="l1" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e7" type="t2" time="2025-01-01T00:06:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_1" qualifier=""/>
+        <relationship object-id="Item_3" qualifier=""/>
+        <relationship object-id="l2" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e8" type="t3" time="2025-01-01T00:07:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_2" qualifier=""/>
+        <relationship object-id="Item_1" qualifier=""/>
+        <relationship object-id="l1" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e9" type="t4" time="2025-01-01T00:08:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_2" qualifier=""/>
+        <relationship object-id="Item_1" qualifier=""/>
+        <relationship object-id="l1" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e10" type="t3" time="2025-01-01T00:09:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_1" qualifier=""/>
+        <relationship object-id="Item_3" qualifier=""/>
+        <relationship object-id="l2" qualifier=""/>
+      </objects>
+    </event>
+    <event id="e11" type="t4" time="2025-01-01T00:10:00Z">
+      <attributes/>
+      <objects>
+        <relationship object-id="Order_1" qualifier=""/>
+        <relationship object-id="Item_3" qualifier=""/>
+        <relationship object-id="l2" qualifier=""/>
+      </objects>
+    </event>
+  </events>
+</log>

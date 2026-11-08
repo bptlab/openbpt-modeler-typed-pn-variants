@@ -8,7 +8,13 @@ import type {
   OcelLog,
   OcelObject,
   OcelType,
-} from "../types";
+} from "../../../ocel/types";
+import {
+  formatLinkedTypes,
+  formatStateTransition,
+  LINKED_TYPES,
+  STATE_TRANSITION,
+} from "../../../ocel/stateAware";
 import {
   getEventTypeNames,
   getObjectTypeNames,
@@ -16,8 +22,6 @@ import {
   QUALIFIER,
 } from "./shared";
 
-const STATE_TRANSITION = "state transition";
-const LINKED_TYPES = "linkedTypes";
 /** Link objects are named l1, l2, … */
 const LINK_ID_PREFIX = "l";
 
@@ -43,7 +47,7 @@ const LINK_ID_PREFIX = "l";
  *   `({p1, p2}, {p3})`, the places it was consumed from and the places it was produced into
  *   (`{}` if none), unless both are empty. Objects only count places with one data class,
  *   links only link places. Places are named by their name, or by their id if they have
- *   none or share it with another place,
+ *   none or share it with another place of the same color,
  * - silent firings: with `logSilentTransitions`, they are logged like other firings but get
  *   no event. Otherwise nothing is logged for them (the links they create or end still
  *   count for which link object a later firing refers to).
@@ -218,7 +222,7 @@ class StateAwareModeBuilder implements OcelLogBuilder {
       entry.object.attributes.push({
         name: STATE_TRANSITION,
         time,
-        value: `(${formatPlaceSet(from)}, ${formatPlaceSet(to)})`,
+        value: formatStateTransition(from, to),
       });
     }
 
@@ -296,7 +300,7 @@ class StateAwareModeBuilder implements OcelLogBuilder {
           {
             name: LINKED_TYPES,
             time,
-            value: linkType.linkedTypeNames.join(", "),
+            value: formatLinkedTypes(linkType.linkedTypeNames),
           },
         ],
         relationships: [],
@@ -351,22 +355,28 @@ function linkedValues(
   });
 }
 
-/** `{a, b}`, or `{}` if empty. */
-function formatPlaceSet(labels: Set<string>): string {
-  return `{${Array.from(labels).join(", ")}}`;
-}
-
-/** Place name, or its id if it has no name or another place has the same name. */
+/**
+ * Place name, or its id if it has no name or another place of the same color (the same set
+ * of data classes) has the same name. Names only need to be unique per color, because an
+ * object's states are the places of its data class and a link's states the places of its
+ * link type.
+ */
 function getPlaceLabels(net: PetriNet): Map<string, string> {
+  const nameKey = (color: readonly string[], name: string) =>
+    JSON.stringify([Array.from(new Set(color)).sort(), name]);
   const nameCounts = new Map<string, number>();
-  for (const { name } of net.places.values()) {
+  for (const { name, color } of net.places.values()) {
     if (name && name.trim() !== "") {
-      nameCounts.set(name, (nameCounts.get(name) ?? 0) + 1);
+      const key = nameKey(color, name);
+      nameCounts.set(key, (nameCounts.get(key) ?? 0) + 1);
     }
   }
   const labels = new Map<string, string>();
-  for (const { id, name } of net.places.values()) {
-    labels.set(id, name && nameCounts.get(name) === 1 ? name : id);
+  for (const { id, name, color } of net.places.values()) {
+    labels.set(
+      id,
+      name && nameCounts.get(nameKey(color, name)) === 1 ? name : id,
+    );
   }
   return labels;
 }
