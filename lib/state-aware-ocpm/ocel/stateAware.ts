@@ -4,6 +4,8 @@
  * together, so the two cannot drift apart:
  * - `state transition`: `({p1, p2}, {p3})`, the places an object was consumed from and the
  *   places it was produced into in one firing (`{}` for none),
+ * - `initialState`: `{p1, p2}`, the places an object of the initial marking starts in
+ *   (`{}` for none),
  * - `linkedTypes`: `Order, Item`, the object types a link object links.
  *
  * Place and type names are separated by ", " and not escaped, so names that contain ", "
@@ -12,10 +14,12 @@
 import { OcelFormatError } from "./errors";
 
 export const STATE_TRANSITION = "state transition";
+export const INITIAL_STATE = "initialState";
 export const LINKED_TYPES = "linkedTypes";
 
 const SEPARATOR = ", ";
 const STATE_TRANSITION_PATTERN = /^\(\{(.*?)\}, \{(.*)\}\)$/;
+const SET_PATTERN = /^\{(.*)\}$/;
 
 export interface StateTransitionValue {
   /** The places the object was consumed from. */
@@ -40,6 +44,21 @@ export function parseStateTransition(value: string): StateTransitionValue {
     );
   }
   return { from: splitList(match[1]), to: splitList(match[2]) };
+}
+
+export function formatInitialState(places: Iterable<string>): string {
+  return formatSet(places);
+}
+
+/** @throws OcelFormatError if the value is not of the form `{…}` */
+export function parseInitialState(value: string): string[] {
+  const match = SET_PATTERN.exec(value.trim());
+  if (!match) {
+    throw new OcelFormatError(
+      `Invalid ${INITIAL_STATE} value "${value}", expected e.g. "{p1, p2}".`,
+    );
+  }
+  return splitList(match[1]);
 }
 
 export function formatLinkedTypes(typeNames: readonly string[]): string {

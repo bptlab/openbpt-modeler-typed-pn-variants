@@ -1,6 +1,8 @@
 import { OcelFormatError } from "../../ocel/errors";
 import {
+  INITIAL_STATE,
   LINKED_TYPES,
+  parseInitialState,
   parseLinkedTypes,
   parseStateTransition,
   STATE_TRANSITION,
@@ -16,6 +18,8 @@ export interface LogObject {
   isLink: boolean;
   /** State transitions by time (milliseconds since the epoch). */
   stateTransitions: Map<number, StateTransitionValue>;
+  /** The places it starts in, if the log says it is in the initial marking. */
+  initialStates?: string[];
   /** Link objects only: the linked objects of data-class types, in relationship order. */
   members: LogObject[];
   /** Link objects only: the first `linkedTypes` value, if any. */
@@ -102,9 +106,21 @@ export function readStateAwareLog(
         }
         object.stateTransitions.set(
           time,
-          readStateTransition(attribute.value, id),
+          readValue(parseStateTransition, attribute.value, id),
         );
         if (!timeTexts.has(time)) timeTexts.set(time, attribute.time);
+      } else if (attribute.name === INITIAL_STATE) {
+        if (object.initialStates === undefined) {
+          object.initialStates = readValue(
+            parseInitialState,
+            attribute.value,
+            id,
+          );
+        } else {
+          warnings.push(
+            `Object ${id} has several ${INITIAL_STATE} values; the first one is used.`,
+          );
+        }
       } else if (
         attribute.name === LINKED_TYPES &&
         object.linkedTypes === undefined
@@ -128,11 +144,12 @@ export function readStateAwareLog(
 
   if (
     !Array.from(objects.values()).some(
-      (object) => object.stateTransitions.size > 0,
+      (object) =>
+        object.stateTransitions.size > 0 || object.initialStates !== undefined,
     )
   ) {
     throw new DiscoveryInputError(
-      `The log contains no "${STATE_TRANSITION}" values. Only state-aware logs can be used (event log generation with --mode=state-aware).`,
+      `The log contains no "${STATE_TRANSITION}" or "${INITIAL_STATE}" values. Only state-aware logs can be used (event log generation with --mode=state-aware).`,
     );
   }
 
@@ -219,12 +236,14 @@ function parseTime(text: string, what: string): number {
   return time;
 }
 
-function readStateTransition(
+/** Parses a state-aware attribute value of an object, with the object id in errors. */
+function readValue<T>(
+  parse: (value: string) => T,
   value: string,
   objectId: string,
-): StateTransitionValue {
+): T {
   try {
-    return parseStateTransition(value);
+    return parse(value);
   } catch (error) {
     if (error instanceof OcelFormatError) {
       throw new DiscoveryInputError(`Object ${objectId}: ${error.message}`);

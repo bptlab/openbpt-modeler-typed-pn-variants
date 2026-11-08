@@ -10,8 +10,10 @@ import type {
   OcelType,
 } from "../../../ocel/types";
 import {
+  formatInitialState,
   formatLinkedTypes,
   formatStateTransition,
+  INITIAL_STATE,
   LINKED_TYPES,
   STATE_TRANSITION,
 } from "../../../ocel/stateAware";
@@ -30,8 +32,8 @@ const LINK_ID_PREFIX = "l";
  * and records how objects move between places:
  * - object types: one per data class (named as in the default mode), then one per distinct
  *   set of data classes of a link place, named `Link<type1>x<type2>…` with the data classes
- *   in declaration order. Every object type has a `state transition` attribute, link types
- *   also `linkedTypes` (both strings),
+ *   in declaration order. Every object type has a `state transition` and an `initialState`
+ *   attribute, link types also `linkedTypes` (all strings),
  * - event types: as in the default mode,
  * - events: one per non-silent firing, related to every object that gets a state transition
  *   in it (see below), i.e. to the objects it moves between places with one data class and
@@ -42,7 +44,12 @@ const LINK_ID_PREFIX = "l";
  *   was consumed creates a new link object. A new link object gets a `linkedTypes` value
  *   (e.g. `Order, Item`) and is related to each object it links, and each of them to it.
  *   Linked objects are not related to each other directly. The links of the initial
- *   marking are logged up front, at the time of the first firing,
+ *   marking are logged up front, at the initial time (see below),
+ * - initial state: every object and link of the initial marking (also objects that only
+ *   occur in link tokens) is logged up front with an `initialState` value `{p1, p2}`, the
+ *   places it starts in (`{}` if none), at the initial time: one time step before the first
+ *   firing. As for state transitions, objects only count places with one data class and
+ *   links only link places,
  * - state transitions: in each logged firing, an object gets a `state transition` value
  *   `({p1, p2}, {p3})`, the places it was consumed from and the places it was produced into
  *   (`{}` if none), unless both are empty. Objects only count places with one data class,
@@ -115,16 +122,51 @@ class StateAwareModeBuilder implements OcelLogBuilder {
       this.objectTypeNames,
     );
 
-    // The links of the initial marking are logged up front, even if no firing touches them.
-    const startTime = clock.timeOfStep(1);
-    for (const [placeId, tokens] of initialMarking) {
-      const linkType = this.linkTypeOfPlace.get(placeId);
-      if (!linkType) continue;
-      for (const token of tokens) {
-        const link = this.liveLink(linkType, token);
-        link.tokenCount++;
-        this.ensureLinkObject(link, linkType, token, startTime);
+    // The initial marking is logged up front, one time step before the first firing, even
+    // if no firing touches it: its links get their link objects, and every object and link
+    // in it gets its initial places as `initialState`.
+    const initialTime = clock.timeOfStep(0);
+    /** OCEL object id → its initial places (labels), in order of the initial marking. */
+    const initialStates = new Map<string, Set<string>>();
+    const addInitialState = (entry: ObjectEntry, label?: string) => {
+      let states = initialStates.get(entry.object.id);
+      if (!states) {
+        states = new Set();
+        initialStates.set(entry.object.id, states);
       }
+      if (label !== undefined) states.add(label);
+    };
+    for (const [placeId, tokens] of initialMarking) {
+      const label = this.placeLabels.get(placeId) ?? placeId;
+      const linkType = this.linkTypeOfPlace.get(placeId);
+      for (const token of tokens) {
+        if (linkType) {
+          const link = this.liveLink(linkType, token);
+          link.tokenCount++;
+          const linkId = this.ensureLinkObject(
+            link,
+            linkType,
+            token,
+            initialTime,
+          );
+          addInitialState(this.getEntry(linkId), label);
+          // Members are in the initial marking too; link places are not their own places.
+          for (const [dataClassId, value] of linkedValues(linkType, token)) {
+            addInitialState(this.ensureObject(dataClassId, value));
+          }
+        } else {
+          for (const [dataClassId, value] of Object.entries(token)) {
+            addInitialState(this.ensureObject(dataClassId, value), label);
+          }
+        }
+      }
+    }
+    for (const [objectId, states] of initialStates) {
+      this.getEntry(objectId).object.attributes.push({
+        name: INITIAL_STATE,
+        time: initialTime,
+        value: formatInitialState(states),
+      });
     }
   }
 
@@ -145,11 +187,15 @@ class StateAwareModeBuilder implements OcelLogBuilder {
       objectTypes: [
         ...Array.from(new Set(this.objectTypeNames.values()), (name) => ({
           name,
-          attributes: [attribute(STATE_TRANSITION)],
+          attributes: [attribute(STATE_TRANSITION), attribute(INITIAL_STATE)],
         })),
         ...this.linkTypes.map(({ name }) => ({
           name,
-          attributes: [attribute(STATE_TRANSITION), attribute(LINKED_TYPES)],
+          attributes: [
+            attribute(STATE_TRANSITION),
+            attribute(INITIAL_STATE),
+            attribute(LINKED_TYPES),
+          ],
         })),
       ],
       eventTypes: Array.from(

@@ -27,18 +27,25 @@ For example: `npx ts-node state-aware-opid-discovery/cli.ts state-aware-opid-dis
 
 `npm run discover-opid -- <log.ocel.xml>` works too (paths relative to the repository root). In PowerShell, quote the separator (`npm run discover-opid '--' …`).
 
-Logs that cannot be used throw a `DiscoveryInputError` whose message is meant for the user. Examples are unreadable XML, a log without `state transition` values, two events at the same time, or two state transitions of one object at the same time. Oddities the discovery works around are returned (and printed) as warnings.
+Logs that cannot be used throw a `DiscoveryInputError` whose message is meant for the user. Examples are unreadable XML, a log without `state transition` and `initialState` values, two events at the same time, or two state transitions of one object at the same time. Oddities the discovery works around are returned (and printed) as warnings.
 
-`test_logs/` holds state-aware logs of the nets with the same names in `../event-log-generation/example_nets/`, for comparing a discovered net with its source.
+`test_logs/` holds state-aware logs of the nets with the same names in `../event-log-generation/example_nets/`, for comparing a discovered net with its source. They were generated with `npx ts-node event-log-generation/cli.ts event-log-generation/example_nets/<net>.xml <parameters>`:
+
+| Logs                                                                                        | Parameters                               |
+| ------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| `Simple_link`, `Simple_link_duplicate_labels`, `Simple_variable_names`, `Simple_exact_sync` | `5 42 --mode=state-aware`                |
+| `Simple_link_silent`                                                                        | `5 42 --mode=state-aware --log-silent`   |
+| `Simple_subset_sync`                                                                        | `1 81 --mode=state-aware`                |
+| `Complex_net`                                                                               | `100 42 --mode=state-aware --log-silent` |
 
 ## Algorithm
 
-**Reading the log.** Object types without a `linkedTypes` attribute are data-class types; the others are link types. A link object's members are the objects of data-class types it is related to (O2O). Times are compared as instants. An _occurrence_ is either an event, with its related objects, or a time point that has state transitions but no event (a silent firing), with all objects that have a state transition then.
+**Reading the log.** Object types without a `linkedTypes` attribute are data-class types; the others are link types. A link object's members are the objects of data-class types it is related to (O2O). Times are compared as instants. An _occurrence_ is either an event, with its related objects, or a time point that has state transitions but no event (a silent firing), with all objects that have a state transition then. The `initialState` values (the places the objects of the initial marking start in) are no state transitions and create no occurrence. Logs without them, e.g. from older versions of the event log generation, can still be used.
 
 1. **Data classes:** one per data-class type, in declaration order (also for types without objects), named after the type, with value type `ID`. The alias is the shortest prefix that no other data class name starts with (case-sensitive), e.g. `Or` and `Of` for Order and Offer. If there is none, the alias is the full name, e.g. `Item` next to `Items`.
 2. **Signatures:** the signature of an occurrence is the set of (object type, source states, target states) of its objects, read from their `state transition` value at the occurrence's time.
 3. **Transitions:** one per distinct event type and signature, named after the event type, and one silent transition per distinct signature of the silent time points. They are ordered by first occurrence.
-4. **Places:** one per object type and state that any object of the type was in (consumed from or produced into), labeled with the state. Places of different object types may share a label.
+4. **Places:** one per object type and state that any object of the type was in (started in according to `initialState`, consumed from, or produced into), labeled with the state. Places of different object types may share a label. A place whose objects never move (e.g. one only read through inhibitor arcs) is only known from `initialState` and gets no arcs.
    - The color is the type's data class. For a link type, it is the data classes named in the `linkedTypes` value of its first object; if objects disagree, there is a warning.
    - Colors are sorted by name, like in the modeler.
 5. **Arcs:** an input arc from every place in the source states of a transition's signature and an output arc to every place in its target states, one per place and direction.

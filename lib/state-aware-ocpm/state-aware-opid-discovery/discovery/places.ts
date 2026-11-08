@@ -12,9 +12,10 @@ export interface PlaceLookup {
 }
 
 /**
- * One place per object type and state that any object of the type was in (consumed from
- * or produced into). The label is the state. The color is the type's data class, or, for
- * a link type, the data classes named in the `linkedTypes` value of its first object.
+ * One place per object type and state that any object of the type was in: started in
+ * (`initialState`), consumed from or produced into. The label is the state. The color is
+ * the type's data class, or, for a link type, the data classes named in the `linkedTypes`
+ * value of its first object.
  *
  * @throws DiscoveryInputError if a link type with states has no `linkedTypes` value, or
  *   names an object type that is not a data class
@@ -37,6 +38,8 @@ export function discoverPlaces(
     );
     const states = new Set<string>();
     for (const object of objectsOfType) {
+      // The initial states come first: they are the earliest.
+      object.initialStates?.forEach((state) => states.add(state));
       const times = Array.from(object.stateTransitions.keys()).sort(
         (a, b) => a - b,
       );

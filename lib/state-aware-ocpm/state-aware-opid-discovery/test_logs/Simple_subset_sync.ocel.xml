@@ -4,16 +4,19 @@
     <object-type name="Order">
       <attributes>
         <attribute name="state transition" type="string"/>
+        <attribute name="initialState" type="string"/>
       </attributes>
     </object-type>
     <object-type name="Item">
       <attributes>
         <attribute name="state transition" type="string"/>
+        <attribute name="initialState" type="string"/>
       </attributes>
     </object-type>
     <object-type name="LinkOrderxItem">
       <attributes>
         <attribute name="state transition" type="string"/>
+        <attribute name="initialState" type="string"/>
         <attribute name="linkedTypes" type="string"/>
       </attributes>
     </object-type>
@@ -26,6 +29,7 @@
   <objects>
     <object id="Order_1" type="Order">
       <attributes>
+        <attribute name="initialState" time="2024-12-31T23:59:00Z">{p1}</attribute>
         <attribute name="state transition" time="2025-01-01T00:00:00Z">({p1}, {p4})</attribute>
       </attributes>
       <objects>
@@ -37,6 +41,7 @@
     </object>
     <object id="Order_2" type="Order">
       <attributes>
+        <attribute name="initialState" time="2024-12-31T23:59:00Z">{p1}</attribute>
         <attribute name="state transition" time="2025-01-01T00:01:00Z">({p1}, {p4})</attribute>
       </attributes>
       <objects>
@@ -45,6 +50,7 @@
     </object>
     <object id="Item_1" type="Item">
       <attributes>
+        <attribute name="initialState" time="2024-12-31T23:59:00Z">{p2}</attribute>
         <attribute name="state transition" time="2025-01-01T00:00:00Z">({p2}, {p5})</attribute>
       </attributes>
       <objects>
@@ -52,13 +58,16 @@
       </objects>
     </object>
     <object id="Item_2" type="Item">
-      <attributes/>
+      <attributes>
+        <attribute name="initialState" time="2024-12-31T23:59:00Z">{p2}</attribute>
+      </attributes>
       <objects>
         <relationship object-id="l2" qualifier=""/>
       </objects>
     </object>
     <object id="Item_3" type="Item">
       <attributes>
+        <attribute name="initialState" time="2024-12-31T23:59:00Z">{p2}</attribute>
         <attribute name="state transition" time="2025-01-01T00:00:00Z">({p2}, {p5})</attribute>
       </attributes>
       <objects>
@@ -67,6 +76,7 @@
     </object>
     <object id="Item_4" type="Item">
       <attributes>
+        <attribute name="initialState" time="2024-12-31T23:59:00Z">{p2}</attribute>
         <attribute name="state transition" time="2025-01-01T00:00:00Z">({p2}, {p5})</attribute>
       </attributes>
       <objects>
@@ -75,6 +85,7 @@
     </object>
     <object id="Item_5" type="Item">
       <attributes>
+        <attribute name="initialState" time="2024-12-31T23:59:00Z">{p2}</attribute>
         <attribute name="state transition" time="2025-01-01T00:01:00Z">({p2}, {p5})</attribute>
       </attributes>
       <objects>
@@ -83,7 +94,8 @@
     </object>
     <object id="l1" type="LinkOrderxItem">
       <attributes>
-        <attribute name="linkedTypes" time="2025-01-01T00:00:00Z">Order, Item</attribute>
+        <attribute name="linkedTypes" time="2024-12-31T23:59:00Z">Order, Item</attribute>
+        <attribute name="initialState" time="2024-12-31T23:59:00Z">{p3}</attribute>
         <attribute name="state transition" time="2025-01-01T00:00:00Z">({p3}, {p6})</attribute>
       </attributes>
       <objects>
@@ -93,7 +105,8 @@
     </object>
     <object id="l2" type="LinkOrderxItem">
       <attributes>
-        <attribute name="linkedTypes" time="2025-01-01T00:00:00Z">Order, Item</attribute>
+        <attribute name="linkedTypes" time="2024-12-31T23:59:00Z">Order, Item</attribute>
+        <attribute name="initialState" time="2024-12-31T23:59:00Z">{p3}</attribute>
       </attributes>
       <objects>
         <relationship object-id="Order_1" qualifier=""/>
@@ -102,7 +115,8 @@
     </object>
     <object id="l3" type="LinkOrderxItem">
       <attributes>
-        <attribute name="linkedTypes" time="2025-01-01T00:00:00Z">Order, Item</attribute>
+        <attribute name="linkedTypes" time="2024-12-31T23:59:00Z">Order, Item</attribute>
+        <attribute name="initialState" time="2024-12-31T23:59:00Z">{p3}</attribute>
         <attribute name="state transition" time="2025-01-01T00:00:00Z">({p3}, {p6})</attribute>
       </attributes>
       <objects>
@@ -112,7 +126,8 @@
     </object>
     <object id="l4" type="LinkOrderxItem">
       <attributes>
-        <attribute name="linkedTypes" time="2025-01-01T00:00:00Z">Order, Item</attribute>
+        <attribute name="linkedTypes" time="2024-12-31T23:59:00Z">Order, Item</attribute>
+        <attribute name="initialState" time="2024-12-31T23:59:00Z">{p3}</attribute>
         <attribute name="state transition" time="2025-01-01T00:00:00Z">({p3}, {p6})</attribute>
       </attributes>
       <objects>
@@ -122,7 +137,8 @@
     </object>
     <object id="l5" type="LinkOrderxItem">
       <attributes>
-        <attribute name="linkedTypes" time="2025-01-01T00:00:00Z">Order, Item</attribute>
+        <attribute name="linkedTypes" time="2024-12-31T23:59:00Z">Order, Item</attribute>
+        <attribute name="initialState" time="2024-12-31T23:59:00Z">{p3}</attribute>
         <attribute name="state transition" time="2025-01-01T00:01:00Z">({p3}, {p6})</attribute>
       </attributes>
       <objects>

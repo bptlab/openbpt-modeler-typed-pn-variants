@@ -4,16 +4,19 @@
     <object-type name="Order">
       <attributes>
         <attribute name="state transition" type="string"/>
+        <attribute name="initialState" type="string"/>
       </attributes>
     </object-type>
     <object-type name="Item">
       <attributes>
         <attribute name="state transition" type="string"/>
+        <attribute name="initialState" type="string"/>
       </attributes>
     </object-type>
     <object-type name="LinkOrderxItem">
       <attributes>
         <attribute name="state transition" type="string"/>
+        <attribute name="initialState" type="string"/>
         <attribute name="linkedTypes" type="string"/>
       </attributes>
     </object-type>

@@ -4,11 +4,13 @@
     <object-type name="Order">
       <attributes>
         <attribute name="state transition" type="string"/>
+        <attribute name="initialState" type="string"/>
       </attributes>
     </object-type>
     <object-type name="Item">
       <attributes>
         <attribute name="state transition" type="string"/>
+        <attribute name="initialState" type="string"/>
       </attributes>
     </object-type>
   </object-types>
@@ -20,11 +22,13 @@
   <objects>
     <object id="Order_2" type="Order">
       <attributes>
+        <attribute name="initialState" time="2024-12-31T23:59:00Z">{p1}</attribute>
         <attribute name="state transition" time="2025-01-01T00:00:00Z">({p1}, {p4})</attribute>
       </attributes>
     </object>
     <object id="Order_1" type="Order">
       <attributes>
+        <attribute name="initialState" time="2024-12-31T23:59:00Z">{p2, p3}</attribute>
         <attribute name="state transition" time="2025-01-01T00:00:00Z">({p2, p3}, {p5})</attribute>
       </attributes>
     </object>
