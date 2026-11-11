@@ -1,5 +1,20 @@
+import { getPartsFromDataClassKey } from "./helpers";
 import { groupTokensByNonVariableDataclasses } from "./linkingLogic";
 
+/**
+ * Exact synchronization: a variable arc marked as exact must consume whole groups of tokens
+ * from its place.
+ *
+ * The tokens of the place are grouped by the arc's non-variable data class keys; without
+ * them, all tokens form one group. A binding consumes from the groups whose non-variable
+ * keys it binds, e.g. the items of the bound order. It is valid only if, for every exact
+ * arc, it consumes from at least one group and binds all values of the variable keys of
+ * each of these groups. Groups of other objects do not matter, even if they share a value
+ * with a bound group (e.g. an employee that also works on another task).
+ *
+ * Variable keys of the resulting bindings get a suffix: `:exact` (all values must be used)
+ * or `:subset` (any non-empty subset may be used).
+ */
 export function checkExactSynchroConstraints(
   exactSynchingArcPlaceInfoDict: ArcPlaceInfoDict,
   validInputBindings: BindingPerDataClass[],
@@ -8,7 +23,6 @@ export function checkExactSynchroConstraints(
   let tokenDictPerArc: {
     arcId: string;
     groupedTokens: GroupedTokens;
-    dataClassInfoDict: DataClassInfoDict;
   }[] = [];
 
   const exactSynchroArcPlaceInfos = Object.entries(
@@ -24,40 +38,49 @@ export function checkExactSynchroConstraints(
       Object.keys(arcPlaceInfo.dataClassInfoDict),
       arcPlaceInfo.tokens,
     );
-    tokenDictPerArc.push({
-      arcId,
-      groupedTokens,
-      dataClassInfoDict: arcPlaceInfo.dataClassInfoDict,
-    });
+    tokenDictPerArc.push({ arcId, groupedTokens });
   }
 
   // For each input Binding ...
-  for (const inputBinding of validInputBindings) {
+  bindings: for (const inputBinding of validInputBindings) {
     let currentSynchedBinding: BindingPerDataClassWithSynchro[] = [];
+    const isBound = (dataClassKey: string, values: string[]) =>
+      values.every((value) =>
+        (inputBinding[dataClassKey] ?? []).includes(value),
+      );
+
     // ... check all exact synchro arcs ...
     for (const tokenDict of tokenDictPerArc) {
-      let countAny = 0;
-      let countAll = 0;
-      for (const arcBinding of Object.values(tokenDict.groupedTokens)) {
-        for (const dataClassKey of Object.keys(arcBinding)) {
-          const tokenValues = arcBinding[dataClassKey];
-          const bindingValues = inputBinding[dataClassKey] ?? [];
-          countAny += tokenValues.some((tokenValue) =>
-            bindingValues.includes(tokenValue),
-          )
-            ? 1
-            : 0;
-          countAll += tokenValues.every((tokenValue) =>
-            bindingValues.includes(tokenValue),
-          )
-            ? 1
-            : 0;
+      // The groups the binding consumes from: it binds the values of their non-variable keys
+      const boundGroups = Object.values(tokenDict.groupedTokens).filter(
+        (group) =>
+          Object.entries(group).every(
+            ([dataClassKey, values]) =>
+              getPartsFromDataClassKey(dataClassKey).isVariable ||
+              isBound(dataClassKey, values),
+          ),
+      );
+      // ... each of which it must consume whole; otherwise, exclude the binding
+      const isConsumedWhole = (group: BindingPerDataClass) =>
+        Object.entries(group).every(
+          ([dataClassKey, values]) =>
+            !getPartsFromDataClassKey(dataClassKey).isVariable ||
+            isBound(dataClassKey, values),
+        );
+      if (boundGroups.length === 0 || !boundGroups.every(isConsumedWhole)) {
+        continue bindings;
+      }
+
+      const groupValues: BindingPerDataClass = {};
+      for (const group of boundGroups) {
+        for (const [dataClassKey, values] of Object.entries(group)) {
+          groupValues[dataClassKey] = [
+            ...(groupValues[dataClassKey] ?? []),
+            ...values,
+          ];
         }
       }
-      if (countAny === 0 || (countAny > 0 && countAny !== countAll)) {
-        // Not or partially included, exclude binding
-        continue;
-      }
+
       for (const [dataClassKey, tokenValues] of Object.entries(inputBinding)) {
         if (dataClassKey.endsWith(":false")) {
           currentSynchedBinding.push({
@@ -67,9 +90,9 @@ export function checkExactSynchroConstraints(
           });
           continue;
         }
-        const syncedValues = (
-          tokenDict.dataClassInfoDict[dataClassKey] ?? []
-        ).filter((value) => tokenValues.includes(value));
+        const syncedValues = (groupValues[dataClassKey] ?? []).filter((value) =>
+          tokenValues.includes(value),
+        );
         const unsynchedValues = tokenValues.filter(
           (value) => !syncedValues.includes(value),
         );
